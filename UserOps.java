@@ -3,6 +3,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class UserOps {
 
@@ -45,6 +46,22 @@ public class UserOps {
             e.printStackTrace();
             return false;
         }
+    }
+
+    private String username;
+    private ArrayList<String> following = new ArrayList<>(); // List of usernames this user follows
+
+    public UserOps(String username) {
+        this.username = username;
+        this.following = new ArrayList<>();
+    }
+
+    public void follow(String username) {
+        this.following.add(username);
+    }
+
+    public ArrayList<String> getFollowing() {
+        return following;
     }
     
 }
