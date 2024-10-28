@@ -26,9 +26,24 @@ public class PlainTextInter {
                 userIn = command.split(" ");
             }
             else if(userIn[0].equals("CreateAccount")) {
-                //TODO
+
                 command = input.nextLine();
                 userIn = command.split(" ");
+
+                if (userIn.length < 3) {
+                    System.out.println("Usage: CreateAccount <username> <password>");
+                    continue;
+                }
+
+                String username = userIn[1];
+                String password = userIn[2];
+
+                boolean success = AccountOps.createAccount(username, password);
+                if (success) {
+                    System.out.println("Account created successfully!");
+                } else {
+                    System.out.println("Account creation failed. Username might already exist.");
+                }
             }
             else if(userIn[0].equals("CreateCollection")) {
                 //TODO
