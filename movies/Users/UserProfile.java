@@ -1,5 +1,5 @@
 package movies.Users;
 
-public class UserInfo {
+public class UserProfile {
     
 }
