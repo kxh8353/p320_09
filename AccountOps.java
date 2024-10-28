@@ -28,7 +28,7 @@ public class AccountOps {
         scanner.close();
     }
 
-    private static boolean createAccount(String username, String password) {
+    static boolean createAccount(String username, String password) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
             String query = "INSERT INTO users (username, password) VALUES (DB_USERNAME, DB_PASSWORD)";
             PreparedStatement statement = conn.prepareStatement(query);
