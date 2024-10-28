@@ -5,9 +5,9 @@ import java.util.Scanner;
 
 public class AccountOps {
 
-    private static final String DB_URL = "jdbc:mysql://localhost:127.0.0.1/p320_09";
-    private static final String DB_USERNAME = System.getenv("DB_USERNAME");
-    private static final String DB_PASSWORD = System.getenv("DB_PASSWORD");
+    private static final String DatabaseURL = "jdbc:mysql://localhost:127.0.0.1/p320_09";
+    private static final String DatabaseUSERNAME = System.getenv("DB_USERNAME");
+    private static final String DatabasePASSWORD = System.getenv("DB_PASSWORD");
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -19,21 +19,23 @@ public class AccountOps {
             String[] userIn = command.split(" ");
 
             if (userIn[0].equals("CreateAccount")) {
-                createAccount(scanner); 
+                createAccount(); 
             } else {
                 System.out.println("Unknown command. Please use 'CreateAccount <username> <password>'");
             }
         }
     }
 
-    static void createAccount(Scanner scanner) {
+    static void createAccount() {
+        Scanner scanner = new Scanner(System.in);
         System.out.print("Enter new username: ");
         String username = scanner.nextLine();
 
         System.out.print("Enter new password: ");
         String password = scanner.nextLine();
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
+
+        try (Connection conn = DriverManager.getConnection(DatabaseURL, DatabaseUSERNAME, DatabasePASSWORD)) {
             String query = "INSERT INTO users (username, password) VALUES (USERNAME, PASSWORD)";
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, username);

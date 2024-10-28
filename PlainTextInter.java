@@ -31,7 +31,7 @@ public class PlainTextInter {
                 // command = input.nextLine();
                 // userIn = command.split(" ");
 
-                AccountOps.createAccount(input);
+                AccountOps.createAccount();
 
             }
             else if(userIn[0].equals("CreateCollection")) {
