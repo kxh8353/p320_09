@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.io.BufferedReader;
+import java.io.FileReader;
  
 public class PlainTextInter {
 
@@ -103,8 +105,26 @@ public static void connect(){
         int lport = 5432;
         String rhost = "starbug.cs.rit.edu";
         int rport = 5432;
-        String user = "YOUR_CS_USERNAME"; //change to your username
-        String password = "YOUR_CS_PASSWORD"; //change to your password
+
+        String usernameFile = "";
+        String passwordFile = "";
+
+        try (BufferedReader br = new BufferedReader(new FileReader("CSAccountInfo.txt"))) {
+            String line = br.readLine();
+
+            if (line != null) {
+                String[] parts = line.split(" ");
+                if (parts.length == 2) {
+                    usernameFile = parts[0];
+                    passwordFile = parts[1];
+                } else {
+                    System.out.println("The file format is incorrect.");
+                }
+            }
+
+
+        String user = usernameFile; //change to your username
+        String password = passwordFile; //change to your password
         String databaseName = "YOUR_DB_NAME"; //change to your database name
 
         String driverName = "org.postgresql.Driver";
