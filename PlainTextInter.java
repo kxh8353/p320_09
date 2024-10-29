@@ -41,7 +41,6 @@ public class PlainTextInter {
                 // command = input.nextLine();
                 // userIn = command.split(" ");
                 connect();
-                System.out.println("Please Enter Your Username");
 
             } else if (userIn[0].equals("CreateCollection")) {
                 //TODO
