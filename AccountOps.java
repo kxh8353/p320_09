@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class AccountOps {
 
-    private static final String DB_URL = "jdbc:mysql://localhost:127.0.0.1/p320_09";
+    private static final String DB_URL = "jdbc:postgresql://127.0.0.1:5432/p320_09";
     private static final String DB_USERNAME = System.getenv("DB_USERNAME");
     private static final String DB_PASSWORD = System.getenv("DB_PASSWORD");
 
