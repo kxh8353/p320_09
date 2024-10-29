@@ -9,7 +9,7 @@ public class AccountOps {
     private static final String DB_USERNAME = System.getenv("DB_USERNAME");
     private static final String DB_PASSWORD = System.getenv("DB_PASSWORD");
 
-    public static void main(String[] args) {
+    public static void AccountOpsMain(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Welcome to MovieMatrix! Let's help you create your new account!");
 
