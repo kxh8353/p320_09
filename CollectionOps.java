@@ -1,6 +1,12 @@
 public class CollectionOps {
 
-    public static void CollectionOpsMain(String[] args){}
+    public void CreateCollection(){
 
+    }
 
+    public void SeeCollection(){
+
+    }
 }
+
+
