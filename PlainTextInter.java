@@ -88,10 +88,11 @@ public class PlainTextInter {
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("CreateAccount")) {
 
-                        // userIn = command.split(" ");
+                        
                         System.out.println("Please Enter Your Username");
-                        command = input.nextLine();
-                        AccountOps.AccountOpsMain(command.split(" "));
+                        // command = input.nextLine();
+
+                        AccountOps.AccountOpsMain(conn, userIn);
 
                     } else if (userIn[0].equals("CreateCollection")) {
                         //TODO
