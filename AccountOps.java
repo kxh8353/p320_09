@@ -41,7 +41,7 @@ public class AccountOps {
         Scanner scanner = new Scanner(System.in);
         System.out.println("welcome to MovieMatrix, let's help you log in");
 
-        while (true){
+        // while (true){
             System.out.println("\nEnter command in the format: Login <username> <password>");
             String command = scanner.nextLine();
             String[] userIn = command.split(" ");
@@ -51,10 +51,12 @@ public class AccountOps {
                 String password = userIn[2];
 
                 login(conn, username, password);
+                return true;
             }else{
                 System.out.println("Unknown command or incorrect usage. Please use 'Login <username> <password>'");
+                return false;
             }
-        }
+        // }
     }
 
     static void login(Connection conn, String username, String password){
