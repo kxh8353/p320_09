@@ -1,9 +1,10 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
+import java.util.Scanner;
 import com.jcraft.jsch.*;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -74,65 +75,87 @@ public class PlainTextInter {
                 boolean quit = false;
                 while (!quit) {
                     if (userIn[0].equals("Help")) {
-                        System.out.println(" 'Login' ");
-                        System.out.println(" 'CreateAccount' ");
-                        System.out.println(" 'CreateCollection' ");
+                        System.out.println(" 'Login' Username Password ");
+                        System.out.println(" 'CreateAccount' Username Password ");
+                        System.out.println(" 'CreateCollection' Name ");
                         System.out.println(" 'SeeCollections' ");
-                        System.out.println(" 'Search' ");
-                        System.out.println(" 'ChangeCollection' ");
+                        System.out.println(" 'Search' Movie ");
+                        System.out.println(" 'ChangeCollection' Name ");
                         System.out.println(" 'Rate' 1-5 ");
-                        System.out.println(" 'Watch' Movie/Collection ");
-                        System.out.println(" 'Follow' ");
-                        System.out.println(" 'Unfollow' ");
+                        System.out.println(" 'Watch' Movie/Collection Name ");
+                        System.out.println(" 'Follow' Username");
+                        System.out.println(" 'Unfollow' Username");
                         System.out.println(" 'Exit' ");
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("CreateAccount")) {
 
+                        
+                        System.out.println("Please Enter Your Username");
+                        // command = input.nextLine();
 
-                        System.out.print("\nEnter command in the format: CreateAccount <username> <password> <firstname> <lastname>");
-                        command = input.nextLine();
-                        userIn = command.split(" ");
-                        String username = userIn[0];
-                        String npassword = userIn[1];
-                        String firstname = userIn[2];
-                        String lastname = userIn[3];
-                        AccountOps.createAccount(conn, username, npassword, firstname, lastname);
-                        command = input.nextLine();
-
+                        AccountOps.AccountOpsMain(conn);
 
                     } else if (userIn[0].equals("CreateCollection")) {
                         //TODO
                         command = input.nextLine();
+                        ///UserOps.UserOpsMain(conn);
+                        CollectionOps.CreateCollection();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Login")) {
                         System.out.println("please type: Login <username> <password>");
-                        UserOps.UserOpsMain(conn, userIn);
+                        UserOps.UserOpsMain(conn);
                     } else if (userIn[0].equals("SeeCollection")) {
                         //TODO
+                        CollectionOps.SeeCollection();
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Search")) {
                         //TODO
+                        System.out.println("Enter Username or ID to search for");
+                        String username = input.nextLine();
+                        MovieOps.search(username);
+
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("ChangeCollection")) {
                         //TODO
+                        CollectionOps.ChangeCollection();
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Rate")) {
                         //TODO
+                        System.out.println("Enter Username or ID to Rate.");
+                        String username = input.nextLine();
+                        if(MovieOps.search(username)){
+                            System.out.println("Enter Rating of movie:");
+                            int rating = Integer.parseInt(input.nextLine());
+                            if(rating<1 || rating>5) {
+                                System.out.println("Rating is out of bounds. Try again.");
+                            }else{
+                                MovieOps.rate(rating);
+                            }
+                        }
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Watch")) {
+
                         //TODO
+
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Follow")) {
                         //TODO
+                        System.out.println("Enter Username or ID to follow.");
+                        String username = input.nextLine();
+                        UserOps.followUsers(username);
+
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Unfollow")) {
+                        System.out.println("Enter Username or ID to Unfollow.");
+                        String username = input.nextLine();
+                        UserOps.unfollowUsers(username);
                         //TODO
                         command = input.nextLine();
                         userIn = command.split(" ");
