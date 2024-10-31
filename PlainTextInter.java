@@ -1,9 +1,11 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
+import java.util.Scanner;
 import com.jcraft.jsch.*;
+
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -88,44 +90,72 @@ public class PlainTextInter {
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("CreateAccount")) {
 
-                        // userIn = command.split(" ");
+                        
                         System.out.println("Please Enter Your Username");
-                        command = input.nextLine();
-                        AccountOps.AccountOpsMain(command.split(" "));
+                        // command = input.nextLine();
+
+                        AccountOps.AccountOpsMain(conn);
 
                     } else if (userIn[0].equals("CreateCollection")) {
                         //TODO
                         command = input.nextLine();
+                        ///UserOps.UserOpsMain(conn);
+                        CollectionOps.CreateCollection();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Login")) {
-                        //TODO
-                        command = input.nextLine();
-                        userIn = command.split(" ");
+                        System.out.println("please type: Login <username> <password>");
+                        UserOps.UserOpsMain(conn);
                     } else if (userIn[0].equals("SeeCollection")) {
                         //TODO
+                        CollectionOps.SeeCollection();
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Search")) {
                         //TODO
+                        System.out.println("Enter Username or ID to search for");
+                        String username = input.nextLine();
+                        MovieOps.search(username);
+
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("ChangeCollection")) {
                         //TODO
+                        CollectionOps.ChangeCollection();
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Rate")) {
                         //TODO
+                        System.out.println("Enter Username or ID to Rate.");
+                        String username = input.nextLine();
+                        if(MovieOps.search(username)){
+                            System.out.println("Enter Rating of movie:");
+                            int rating = Integer.parseInt(input.nextLine());
+                            if(rating<1 || rating>5) {
+                                System.out.println("Rating is out of bounds. Try again.");
+                            }else{
+                                MovieOps.rate(rating);
+                            }
+                        }
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Watch")) {
+
                         //TODO
+
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Follow")) {
                         //TODO
+                        System.out.println("Enter Username or ID to follow.");
+                        String username = input.nextLine();
+                        UserOps.followUsers(username);
+
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Unfollow")) {
+                        System.out.println("Enter Username or ID to Unfollow.");
+                        String username = input.nextLine();
+                        UserOps.unfollowUsers(username);
                         //TODO
                         command = input.nextLine();
                         userIn = command.split(" ");

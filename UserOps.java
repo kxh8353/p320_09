@@ -1,67 +1,58 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.Scanner;
 import java.util.ArrayList;
 
 public class UserOps {
 
 
-    private static final String DB_URL = "jdbc:mysql://localhost:127.0.0.1/p320_09"; 
-    private static final String DB_USERNAME = System.getenv("DB_USERNAME");
-    private static final String DB_PASSWORD = System.getenv("DB_PASSWORD");
-
-    public static void main(String[] args) {
+    public static void UserOpsMain(Connection conn) {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("welcome to MovieMatrix, let's help you log in");
 
-        System.out.print("Enter Username: ");
-        String username = scanner.nextLine();
+        while (true){
+            System.out.println("\nEnter command in the format: Login <username> <password>");
+            String command = scanner.nextLine();
+            String[] userIn = command.split(" ");
 
-        System.out.print("Enter Password: ");
-        String password = scanner.nextLine();
+            if (userIn[0].equalsIgnoreCase("Login")){
+                String username = userIn[1];
+                String password = userIn[2];
 
-        if (authenticateUser(username, password)) {
-            System.out.println("Login Successful!");
-
-        } else {
-            System.out.println("Invalid credentials, please try again.");
+                login(conn, username, password);
+            }else{
+                System.out.println("Unknown command or incorrect usage. Please use 'Login <username> <password>'");
+            }
         }
-
-        scanner.close();
     }
 
     // authenticate user with the database
-    private static boolean authenticateUser(String username, String password) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD)) {
-            String query = "SELECT * FROM users WHERE username = DB_USERNAME AND password = DB_PASSWORD";
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.setString(1, username); // compare
-            statement.setString(2, password); // compare
+    static void login(Connection conn, String username, String password){
+        String query = "SELECT password FROM users WHERE username = ?";
 
-            ResultSet rs = statement.executeQuery();
-            return rs.next(); // success
+        try(PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setString(1, username);
+            ResultSet resultset = stmt.executeQuery();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            if (resultset.next()){
+                String storedPassword = resultset.getString("password");
+                if (storedPassword.equals(password)){
+                    System.out.println("Login successful for user: " + username);
+                }else{
+                    System.out.println("Login failed. incorrect password");
+                }
+            }else{
+                System.out.println("Login failed: username does not exist");
+            }
+        } catch (SQLException e){
+            System.out.println(e);
         }
     }
 
-    private String username;
-    private ArrayList<String> following = new ArrayList<>(); // List of usernames this user follows
+    public static void followUsers(String username){
+        ///parse list of usernames and IDs
 
-    public UserOps(String username) {
-        this.username = username;
-        this.following = new ArrayList<>();
     }
 
-    public void follow(String username) {
-        this.following.add(username);
+    public static void unfollowUsers(String username) {
     }
-
-    public ArrayList<String> getFollowing() {
-        return following;
-    }
-    
 }
