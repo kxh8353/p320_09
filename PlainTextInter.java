@@ -72,29 +72,44 @@ public class PlainTextInter {
                 System.out.println("Welcome, Please Enter Your Command. Enter 'Help' to see commands");
                 String command = input.nextLine();
                 userIn = command.split(" ");
+                boolean logined = false;
                 boolean quit = false;
                 while (!quit) {
                     if (userIn[0].equals("Help")) {
-                        System.out.println(" 'Login' Username Password ");
-                        System.out.println(" 'CreateAccount' Username Password ");
-                        System.out.println(" 'CreateCollection' Name ");
+                        System.out.println(" 'Login' ");
+                        System.out.println(" 'CreateAccount' ");
+                        System.out.println(" 'CreateCollection' ");
                         System.out.println(" 'SeeCollections' ");
-                        System.out.println(" 'Search' Movie ");
-                        System.out.println(" 'ChangeCollection' Name ");
+                        System.out.println(" 'Search' ");
+                        System.out.println(" 'ChangeCollection' ");
                         System.out.println(" 'Rate' 1-5 ");
-                        System.out.println(" 'Watch' Movie/Collection Name ");
-                        System.out.println(" 'Follow' Username");
-                        System.out.println(" 'Unfollow' Username");
+                        System.out.println(" 'Watch' ");
+                        System.out.println(" 'Follow' ");
+                        System.out.println(" 'Unfollow' ");
                         System.out.println(" 'Exit' ");
                         command = input.nextLine();
                         userIn = command.split(" ");
+                    }else if (userIn[0].equals("Login")) {
+                        if(AccountOps.login(conn) == true){
+                            logined = true;
+                            System.out.println("Logged in");
+                        }
+                        else{
+                            logined = false;
+                            System.out.println("User does not exist");
+                        }
                     } else if (userIn[0].equals("CreateAccount")) {
 
-                        
-                        System.out.println("Please Enter Your Username");
-                        // command = input.nextLine();
-
-                        AccountOps.AccountOpsMain(conn);
+                        System.out.print("\nEnter in the format: CreateAccount <username> <password> <firstname> <lastname>");
+                        command = input.nextLine();
+                        userIn = command.split(" ");
+                        String username = userIn[0];
+                        String npassword = userIn[1];
+                        String firstname = userIn[2];
+                        String lastname = userIn[3];
+                        AccountOps.createAccount(conn, username, npassword, firstname, lastname);
+                        logined = true;
+                        command = input.nextLine();
 
                     } else if (userIn[0].equals("CreateCollection")) {
                         //TODO
@@ -103,7 +118,7 @@ public class PlainTextInter {
                         UserOps.UserOpsMain(conn);
                         command = input.nextLine();
                         ///UserOps.UserOpsMain(conn);
-                        CollectionOps.CreateCollection();
+                        CollectionOps.CreateCollection(conn);
                         userIn = command.split(" ");
 
                     } else if (userIn[0].equals("Login")) {
@@ -113,7 +128,7 @@ public class PlainTextInter {
 
                     } else if (userIn[0].equals("SeeCollection")) {
                         //TODO
-                        CollectionOps.SeeCollection();
+                        CollectionOps.SeeCollection(conn);
                         command = input.nextLine();
                         userIn = command.split(" ");
 
@@ -127,7 +142,7 @@ public class PlainTextInter {
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("ChangeCollection")) {
                         //TODO
-                        CollectionOps.ChangeCollection();
+                        CollectionOps.ChangeCollection(conn);
                         command = input.nextLine();
                         userIn = command.split(" ");
 
