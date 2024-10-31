@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class UserOps {
 
 
-    public static void UserOpsMain(Connection conn, String[] args) {
+    public static void UserOpsMain(Connection conn) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("welcome to MovieMatrix, let's help you log in");
 
@@ -48,8 +48,11 @@ public class UserOps {
         }
     }
 
-    private static void followUsers(String username, String password){
+    public static void followUsers(String username){
+        ///parse list of usernames and IDs
 
     }
-    
+
+    public static void unfollowUsers(String username) {
+    }
 }

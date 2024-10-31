@@ -1,10 +1,14 @@
 public class CollectionOps {
 
-    public void CreateCollection(){
+    public static void CreateCollection(){
 
     }
 
-    public void SeeCollection(){
+    public static void SeeCollection(){
+
+    }
+    public static void ChangeCollection(){
+
 
     }
 }
