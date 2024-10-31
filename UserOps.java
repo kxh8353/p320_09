@@ -1,3 +1,4 @@
+import javax.xml.stream.events.Comment;
 import java.sql.*;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -48,14 +49,59 @@ public class UserOps {
         }
     }
 
-    public static void followUsers(String username){
+    public static void followUsers(String username,Connection conn){
+        String searchSQL = "SELECT UID FROM users WHERE username = ?";
+        String insertSQL = "INSERT INTO follows (follower_id, followee) VALUES (?, ?)";
 
+
+        try(PreparedStatement stmt = conn.prepareStatement(insertSQL)){
+            stmt.setString(1, username);
+            ResultSet resultset = stmt.executeQuery();
+
+            if (resultset.next()){
+                ///THIS HAS TO BE CHANGED
+                String storedUID = resultset.getString("password");
+                if (storedUID.equals("Blank")){
+                    ///THIS HAS TO BE CHANGED
+                    System.out.println("Follow successful for user: " + username);
+                }else{
+                    System.out.println("Follow failed. Incorrect username or UID");
+                }
+            }else{
+                System.out.println("Follow failed: username does not exist");
+            }
+        } catch (SQLException e){
+            System.out.println(e);
+        }
         ///first, parse list of usernames and IDs and see if username exists
         //if not, error handling needed
 
     }
 
-    public static void unfollowUsers(String username) {
+    public static void unfollowUsers(String username, Connection conn) {
         //similar to follow, first check if username exists. if not, error handle.
+        String searchSQL = "SELECT UID FROM users WHERE username = username";
+        String insertSQL = "DELETE FROM follows (follower_id, followee) VALUES (?, ?)";
+
+        try(PreparedStatement stmt = conn.prepareStatement(insertSQL)){
+            stmt.setString(1, username);
+            ResultSet resultset = stmt.executeQuery();
+
+            if (resultset.next()){
+                ///THIS HAS TO BE CHANGED
+                String storedUID = resultset.getString("password");
+                if (storedUID.equals("Blank")){
+                    ///THIS HAS TO BE CHANGED
+                    System.out.println("Follow successful for user: " + username);
+                }else{
+                    System.out.println("Follow failed. Incorrect username or UID");
+                }
+            }else{
+                System.out.println("Follow failed: username does not exist");
+            }
+        } catch (SQLException e){
+            System.out.println(e);
+        }
+
     }
 }

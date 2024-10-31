@@ -195,7 +195,7 @@ public class PlainTextInter {
                         if(logined) {
                             System.out.println("Enter Username or ID to follow.");
                             String username = input.nextLine();
-                            UserOps.followUsers(username);
+                            UserOps.followUsers(username,conn);
                         }else{
                             System.out.println("User not logged in. Try again.");
                         }
@@ -205,7 +205,7 @@ public class PlainTextInter {
                         if(logined) {
                             System.out.println("Enter Username or ID to Unfollow.");
                             command = input.nextLine();
-                            UserOps.unfollowUsers(command);
+                            UserOps.unfollowUsers(command,conn);
                             //TODO
                         }else{
                             System.out.println("User not logged in. Try again.");
