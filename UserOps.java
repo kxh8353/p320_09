@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class UserOps {
 
 
-    public static void UserOpsMain(Connection conn) {
+    public static void login(Connection conn) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("welcome to MovieMatrix, let's help you log in");
 

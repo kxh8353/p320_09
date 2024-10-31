@@ -114,17 +114,18 @@ public class PlainTextInter {
                     } else if (userIn[0].equals("CreateCollection")) {
                         //TODO
                         System.out.println("Name your collection: ");
-
-                        UserOps.UserOpsMain(conn);
                         command = input.nextLine();
+
                         ///UserOps.UserOpsMain(conn);
-                        CollectionOps.CreateCollection(conn);
+                        CollectionOps.CreateCollection(command,conn);
+
+                        command = input.nextLine();
                         userIn = command.split(" ");
 
                     } else if (userIn[0].equals("Login")) {
 
                         System.out.println("please type: Login <username> <password>");
-                        UserOps.UserOpsMain(conn);
+                        UserOps.login(conn);
 
                     } else if (userIn[0].equals("SeeCollection")) {
                         //TODO
@@ -137,9 +138,14 @@ public class PlainTextInter {
                         System.out.println("Enter Username or ID to search for");
                         command = input.nextLine();
                         MovieOps.search(command);
-
+                        if(!MovieOps.search(command)){
+                            System.out.println("Username DNE. Try again.");
+                        }else{
+                            System.out.println("Username Exists.");
+                        }
                         command = input.nextLine();
                         userIn = command.split(" ");
+
                     } else if (userIn[0].equals("ChangeCollection")) {
                         //TODO
                         CollectionOps.ChangeCollection(conn);
@@ -148,17 +154,20 @@ public class PlainTextInter {
 
                     } else if (userIn[0].equals("Rate")) {
                         //TODO
-
-                        System.out.println("Enter Movie name or ID to rate");
-                        command = input.nextLine();
-                        if(MovieOps.search(command)){
-                            System.out.println("Enter Rating of movie:");
-                            int rating = Integer.parseInt(input.nextLine());
-                            if(rating<1 || rating>5) {
-                                System.out.println("Rating is out of bounds. Try again.");
-                            }else{
-                                MovieOps.rate(rating,command,conn);
+                        if(logined) {
+                            System.out.println("Enter Movie name or ID to rate");
+                            command = input.nextLine();
+                            if (MovieOps.search(command)) {
+                                System.out.println("Enter Rating of movie:");
+                                int rating = Integer.parseInt(input.nextLine());
+                                if (rating < 1 || rating > 5) {
+                                    System.out.println("Rating is out of bounds. Try again.");
+                                } else {
+                                    MovieOps.rate(rating, command, conn);
+                                }
                             }
+                        }else{
+                            System.out.println("User not logged in. Try again.");
                         }
                         command = input.nextLine();
                         userIn = command.split(" ");
@@ -166,32 +175,41 @@ public class PlainTextInter {
                     } else if (userIn[0].equals("Watch")) {
 
                         //TODO
-                        System.out.println("Enter Movie name or ID to watch.");
-                        command = input.nextLine();
-                        if(MovieOps.search(command)) {
-                            MovieOps.watch(command);
+                        if(logined) {
+                            System.out.println("Enter Movie name or ID to watch.");
+                            command = input.nextLine();
+                            if (MovieOps.search(command)) {
+                                MovieOps.watch(command);
+                            } else {
+                                System.out.println("Movie does not exist. Try again.");
+                            }
                         }else{
-                            System.out.println("Movie does not exist. Try again.");
+                            System.out.println("User not logged in. Try again.");
                         }
-
                         command = input.nextLine();
                         userIn = command.split(" ");
 
                     } else if (userIn[0].equals("Follow")) {
                         //TODO
                         //Does not check if user exists, should be done in userops
-                        System.out.println("Enter Username or ID to follow.");
-                        String username = input.nextLine();
-                        UserOps.followUsers(username);
-
+                        if(logined) {
+                            System.out.println("Enter Username or ID to follow.");
+                            String username = input.nextLine();
+                            UserOps.followUsers(username);
+                        }else{
+                            System.out.println("User not logged in. Try again.");
+                        }
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Unfollow")) {
-
-                        System.out.println("Enter Username or ID to Unfollow.");
-                        command = input.nextLine();
-                        UserOps.unfollowUsers(command);
-                        //TODO
+                        if(logined) {
+                            System.out.println("Enter Username or ID to Unfollow.");
+                            command = input.nextLine();
+                            UserOps.unfollowUsers(command);
+                            //TODO
+                        }else{
+                            System.out.println("User not logged in. Try again.");
+                        }
                         command = input.nextLine();
                         userIn = command.split(" ");
 

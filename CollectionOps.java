@@ -19,7 +19,7 @@ import java.io.FileReader;
 
 public class CollectionOps {
 
-    public static void CreateCollection(Connection conn){
+    public static void CreateCollection(String name, Connection conn){
 
         Statement stmt;
         try {
