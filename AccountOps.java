@@ -8,7 +8,7 @@ import java.util.Random;
 
 
 public class AccountOps {
-//    private static Map<String, String> accounts = new HashMap<>();
+
 
     /**public static void AccountOpsMain(Connection conn, String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -54,24 +54,65 @@ public class AccountOps {
 //        }
 
 
-        String checkQuery = "SELECT COUNT(*) FROM users WHERE username = ?";
+        int minimumPermittedID = 1500;
+        int incrementID = minimumPermittedID;
+        int newId = 0;
 
-        try (PreparedStatement checkStatement = conn.prepareStatement(checkQuery)) {
-            checkStatement.setString(1, username);
-            ResultSet resultSet = checkStatement.executeQuery();
+        String checkUsernameQuery = "SELECT COUNT(*) FROM users WHERE username = ?";
+        String checkIdQuery = "SELECT COUNT(*) FROM users WHERE uid = ?"; // Assuming 'uid' is your ID column
 
-            if (resultSet.next() && resultSet.getInt(1) > 0) {
-                System.out.println("Account creation failed. Username already exists.");
-                return; // Exit the method if the username exists
+        try (PreparedStatement checkUsernameStatement = conn.prepareStatement(checkUsernameQuery);
+            PreparedStatement checkIdStatement = conn.prepareStatement(checkIdQuery)) {
+
+            // Check username uniqueness
+            checkUsernameStatement.setString(1, username);
+            try (ResultSet rs = checkUsernameStatement.executeQuery()) {
+                if (rs.next()) {
+                    int usernameCount = rs.getInt(1);
+                    if (usernameCount > 0) {
+                        System.out.println("Username already exists.");
+                        return; // Handle existing username case
+                    }
+                }
             }
+
+            // Check for unique ID
+            while (true) {
+                checkIdStatement.setInt(1, incrementID);
+                try (ResultSet rs = checkIdStatement.executeQuery()) {
+                    if (rs.next()) {
+                        int idCount = rs.getInt(1);
+                        if (idCount == 0) {
+                            newId = incrementID; // Found a unique ID
+                            break;
+                        }
+                    }
+                }
+                incrementID++; // Increment to check the next ID
+            }
+
+            System.out.println("New ID generated: " + newId);
         } catch (SQLException e) {
             e.printStackTrace();
-            return; // Exit on error
         }
 
+        // String checkQuery = "SELECT COUNT(*) FROM users WHERE username = ?";
+
+        // try (PreparedStatement checkStatement = conn.prepareStatement(checkQuery)) {
+        //     checkStatement.setString(1, username);
+        //     ResultSet resultSet = checkStatement.executeQuery();
+
+        //     if (resultSet.next() && resultSet.getInt(1) > 0) {
+        //         System.out.println("Account creation failed. Username already exists.");
+        //         return; // Exit the method if the username exists
+        //     }
+        // } catch (SQLException e) {
+        //     e.printStackTrace();
+        //     return; // Exit on error
+        // }
+
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-        Random random = new Random();
-        int randomIntInRange = random.nextInt(2000);
+        
 
 
         String insertQuery = "INSERT INTO users (username, password, firstname, lastname, date_made, uid) VALUES (?, ?, ?, ?, ?, ?)";
@@ -82,7 +123,7 @@ public class AccountOps {
             insertStatement.setString(3, firstname);
             insertStatement.setString(4, lastname);
             insertStatement.setTimestamp(5, currentTimestamp);
-            insertStatement.setInt(6, randomIntInRange);
+            insertStatement.setInt(6, newId);
 
             int rowsAffected = insertStatement.executeUpdate();
 
