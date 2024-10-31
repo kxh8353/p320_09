@@ -100,14 +100,14 @@ public class PlainTextInter {
                         //TODO
                         command = input.nextLine();
                         ///UserOps.UserOpsMain(conn);
-                        CollectionOps.CreateCollection();
+                        CollectionOps.CreateCollection(conn);
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Login")) {
                         System.out.println("please type: Login <username> <password>");
                         UserOps.UserOpsMain(conn);
                     } else if (userIn[0].equals("SeeCollection")) {
                         //TODO
-                        CollectionOps.SeeCollection();
+                        CollectionOps.SeeCollection(conn);
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Search")) {
@@ -120,7 +120,7 @@ public class PlainTextInter {
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("ChangeCollection")) {
                         //TODO
-                        CollectionOps.ChangeCollection();
+                        CollectionOps.ChangeCollection(conn);
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Rate")) {
