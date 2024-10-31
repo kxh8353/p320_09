@@ -98,23 +98,30 @@ public class PlainTextInter {
 
                     } else if (userIn[0].equals("CreateCollection")) {
                         //TODO
+                        System.out.println("Name your collection: ");
+
+                        UserOps.UserOpsMain(conn);
                         command = input.nextLine();
                         ///UserOps.UserOpsMain(conn);
                         CollectionOps.CreateCollection();
                         userIn = command.split(" ");
+
                     } else if (userIn[0].equals("Login")) {
+
                         System.out.println("please type: Login <username> <password>");
                         UserOps.UserOpsMain(conn);
+
                     } else if (userIn[0].equals("SeeCollection")) {
                         //TODO
                         CollectionOps.SeeCollection();
                         command = input.nextLine();
                         userIn = command.split(" ");
+
                     } else if (userIn[0].equals("Search")) {
                         //TODO
                         System.out.println("Enter Username or ID to search for");
-                        String username = input.nextLine();
-                        MovieOps.search(username);
+                        command = input.nextLine();
+                        MovieOps.search(command);
 
                         command = input.nextLine();
                         userIn = command.split(" ");
@@ -123,29 +130,41 @@ public class PlainTextInter {
                         CollectionOps.ChangeCollection();
                         command = input.nextLine();
                         userIn = command.split(" ");
+
                     } else if (userIn[0].equals("Rate")) {
                         //TODO
-                        System.out.println("Enter Username or ID to Rate.");
-                        String username = input.nextLine();
-                        if(MovieOps.search(username)){
+
+                        System.out.println("Enter Movie name or ID to rate");
+                        command = input.nextLine();
+                        if(MovieOps.search(command)){
                             System.out.println("Enter Rating of movie:");
                             int rating = Integer.parseInt(input.nextLine());
                             if(rating<1 || rating>5) {
                                 System.out.println("Rating is out of bounds. Try again.");
                             }else{
-                                MovieOps.rate(rating);
+                                MovieOps.rate(rating,command,conn);
                             }
                         }
                         command = input.nextLine();
                         userIn = command.split(" ");
+
                     } else if (userIn[0].equals("Watch")) {
 
                         //TODO
+                        System.out.println("Enter Movie name or ID to watch.");
+                        command = input.nextLine();
+                        if(MovieOps.search(command)) {
+                            MovieOps.watch(command);
+                        }else{
+                            System.out.println("Movie does not exist. Try again.");
+                        }
 
                         command = input.nextLine();
                         userIn = command.split(" ");
+
                     } else if (userIn[0].equals("Follow")) {
                         //TODO
+                        //Does not check if user exists, should be done in userops
                         System.out.println("Enter Username or ID to follow.");
                         String username = input.nextLine();
                         UserOps.followUsers(username);
@@ -153,12 +172,14 @@ public class PlainTextInter {
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Unfollow")) {
+
                         System.out.println("Enter Username or ID to Unfollow.");
-                        String username = input.nextLine();
-                        UserOps.unfollowUsers(username);
+                        command = input.nextLine();
+                        UserOps.unfollowUsers(command);
                         //TODO
                         command = input.nextLine();
                         userIn = command.split(" ");
+
                     } else if (userIn[0].equals("Exit")) {
                         quit = true;
                     } else {

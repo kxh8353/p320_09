@@ -49,10 +49,13 @@ public class UserOps {
     }
 
     public static void followUsers(String username){
-        ///parse list of usernames and IDs
+
+        ///first, parse list of usernames and IDs and see if username exists
+        //if not, error handling needed
 
     }
 
     public static void unfollowUsers(String username) {
+        //similar to follow, first check if username exists. if not, error handle.
     }
 }
