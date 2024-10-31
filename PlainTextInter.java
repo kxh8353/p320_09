@@ -5,8 +5,6 @@ import java.util.Scanner;
 
 import com.jcraft.jsch.*;
 
-import movies.PostgresSSH.lib.jsch-0.1.55.src.main.java.com.jcraft.jsch.JSch;
-import movies.PostgresSSH.lib.jsch-0.1.55.src.main.java.com.jcraft.jsch.Session;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
