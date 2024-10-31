@@ -37,7 +37,9 @@ public class AccountOps {
 //            }
         }
     }*/
-
+    static boolean login(Connection conn){
+        return false;
+    }
     static void createAccount(Connection conn, String username, String password, String firstname, String lastname) {
 
 //        try {
