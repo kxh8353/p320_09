@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.jcraft.jsch.*;
+
+import movies.PostgresSSH.lib.jsch-0.1.55.src.main.java.com.jcraft.jsch.JSch;
+import movies.PostgresSSH.lib.jsch-0.1.55.src.main.java.com.jcraft.jsch.Session;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -99,9 +103,8 @@ public class PlainTextInter {
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("Login")) {
-                        //TODO
-                        command = input.nextLine();
-                        userIn = command.split(" ");
+                        System.out.println("please type: Login <username> <password>");
+                        UserOps.UserOpsMain(conn, userIn);
                     } else if (userIn[0].equals("SeeCollection")) {
                         //TODO
                         command = input.nextLine();
