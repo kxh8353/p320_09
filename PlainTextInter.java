@@ -5,9 +5,6 @@ import java.util.Scanner;
 
 import com.jcraft.jsch.*;
 
-import movies.PostgresSSH.lib.jsch-0.1.55.src.main.java.com.jcraft.jsch.JSch;
-import movies.PostgresSSH.lib.jsch-0.1.55.src.main.java.com.jcraft.jsch.Session;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -77,26 +74,32 @@ public class PlainTextInter {
                 boolean quit = false;
                 while (!quit) {
                     if (userIn[0].equals("Help")) {
-                        System.out.println(" 'Login' Username Password ");
-                        System.out.println(" 'CreateAccount' Username Password ");
-                        System.out.println(" 'CreateCollection' Name ");
+                        System.out.println(" 'Login' ");
+                        System.out.println(" 'CreateAccount' ");
+                        System.out.println(" 'CreateCollection' ");
                         System.out.println(" 'SeeCollections' ");
-                        System.out.println(" 'Search' Movie ");
-                        System.out.println(" 'ChangeCollection' Name ");
+                        System.out.println(" 'Search' ");
+                        System.out.println(" 'ChangeCollection' ");
                         System.out.println(" 'Rate' 1-5 ");
-                        System.out.println(" 'Watch' Movie/Collection Name ");
-                        System.out.println(" 'Follow' Username");
-                        System.out.println(" 'Unfollow' Username");
+                        System.out.println(" 'Watch' Movie/Collection ");
+                        System.out.println(" 'Follow' ");
+                        System.out.println(" 'Unfollow' ");
                         System.out.println(" 'Exit' ");
                         command = input.nextLine();
                         userIn = command.split(" ");
                     } else if (userIn[0].equals("CreateAccount")) {
 
-                        
-                        System.out.println("Please Enter Your Username");
-                        // command = input.nextLine();
 
-                        AccountOps.AccountOpsMain(conn, userIn);
+                        System.out.print("\nEnter command in the format: CreateAccount <username> <password> <firstname> <lastname>");
+                        command = input.nextLine();
+                        userIn = command.split(" ");
+                        String username = userIn[0];
+                        String npassword = userIn[1];
+                        String firstname = userIn[2];
+                        String lastname = userIn[3];
+                        AccountOps.createAccount(conn, username, npassword, firstname, lastname);
+                        command = input.nextLine();
+
 
                     } else if (userIn[0].equals("CreateCollection")) {
                         //TODO

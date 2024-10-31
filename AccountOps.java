@@ -10,7 +10,7 @@ import java.util.Random;
 public class AccountOps {
 //    private static Map<String, String> accounts = new HashMap<>();
 
-    public static void AccountOpsMain(Connection conn, String[] args) {
+    /**public static void AccountOpsMain(Connection conn, String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Welcome to MovieMatrix! Let's help you create your new account!");
 
@@ -36,7 +36,7 @@ public class AccountOps {
 //                System.out.println(e);
 //            }
         }
-    }
+    }*/
 
     static void createAccount(Connection conn, String username, String password, String firstname, String lastname) {
 
