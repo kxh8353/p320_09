@@ -122,10 +122,10 @@ public class PlainTextInter {
                         command = input.nextLine();
                         userIn = command.split(" ");
 
-                    } else if (userIn[0].equals("Login")) {
+                    // } else if (userIn[0].equals("Login")) {
 
-                        System.out.println("please type: Login <username> <password>");
-                        UserOps.login(conn);
+                    //     System.out.println("please type: Login <username> <password>");
+                    //     UserOps.login(conn);
 
                     } else if (userIn[0].equals("SeeCollection")) {
                         //TODO
