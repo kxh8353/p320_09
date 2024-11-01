@@ -176,7 +176,7 @@ public class CollectionOps {
 
         try (PreparedStatement viewStatement = conn.prepareStatement(query)){
             viewStatement.setInt(1, uid);
-            viewStatement.setString(1, collectionName);
+            viewStatement.setString(2, collectionName);
 
             ResultSet rset = viewStatement.executeQuery();
 
@@ -197,7 +197,7 @@ public class CollectionOps {
         }
 
         // Get movie id
-        String query2 = "SELECT movieid FROM movies WHERE name = ?";
+        String query2 = "SELECT movieid FROM movies WHERE title = ?";
         System.out.println("Enter name of the movie you would like to add to the collection: ");
         String movieName = input.nextLine();
 
