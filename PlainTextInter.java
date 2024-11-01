@@ -75,7 +75,7 @@ public class PlainTextInter {
                     if (!logined) {
                         System.out.println("Enter command (e.g., Login <username> <password> or Help):");
                     } else {
-                        System.out.println("Enter command (e.g., CreateCollection, SeeCollection, Follow, Unfollow, Logout, Help):");
+                        System.out.println("Enter command (e.g., CreateCollection, SeeCollection, Follow, Unfollow, Logout, Help, etc...):");
                     }
 
                     String command = input.nextLine();
@@ -168,14 +168,7 @@ public class PlainTextInter {
 
                             //Movie Ops
                             case "search":
-                                System.out.println("Enter Username or ID to search for:");
-                                // command = input.nextLine();
                                 MovieOps.search(conn);
-                                // if (MovieOps.search(command,conn)) {
-                                //     System.out.println("Username Exists.");
-                                // } else {
-                                //     System.out.println("Username DNE. Try again.");
-                                // }
                                 break;
                             case "rate":
                                 System.out.println("Enter movie you would like to rate");
