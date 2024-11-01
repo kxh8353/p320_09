@@ -83,18 +83,34 @@ public class PlainTextInter {
 
                     if (userIn[0].equalsIgnoreCase("Help")) {
                         System.out.println("Available commands:");
+
+                        //Account ops
                         System.out.println(" 'Login' ");
                         System.out.println(" 'CreateAccount' ");
+
+                        //Collection ops
                         System.out.println(" 'CreateCollection' ");
+                        System.out.println(" 'ModifyCollectionName' ");
                         System.out.println(" 'SeeCollections' ");
+                        System.out.println(" 'AddMovieToCollection' ");
+                        System.out.println(" 'RemoveMovieFromCollection' ");
+                        System.out.println(" 'DeleteCollection' ");
+
+                        //Movie ops
                         System.out.println(" 'Search' ");
-                        System.out.println(" 'ChangeCollection' ");
                         System.out.println(" 'Rate' 1-5 ");
                         System.out.println(" 'Watch' ");
+
+                        //User ops
                         System.out.println(" 'Follow' ");
                         System.out.println(" 'Unfollow' ");
+
+                        //Exit app / log out
                         System.out.println(" 'Logout' ");
                         System.out.println(" 'Exit' ");
+
+
+                    // Login
                     } else if (userIn[0].equalsIgnoreCase("Login") && !logined) {
                         int result = AccountOps.handlelogin(conn);
                         if (result !=1) {
@@ -104,9 +120,15 @@ public class PlainTextInter {
                         } else {
                             System.out.println("Login failed. Please try again.");
                         }
+
+
+                    // Log out
                     } else if (userIn[0].equalsIgnoreCase("Logout") && logined) {
                         logined = false; 
                         System.out.println("Logged out successfully.");
+
+                    
+                    // Create an account
                     } else if (userIn[0].equalsIgnoreCase("CreateAccount") && !logined) {
                         System.out.print("\nEnter in the format: CreateAccount <username> <password> <firstname> <lastname>");
                         command = input.nextLine();
@@ -116,8 +138,13 @@ public class PlainTextInter {
                         } else {
                             System.out.println("Invalid format. Please try again.");
                         }
+
+
+                    // Logged in actions
                     } else if (logined) {
                         switch (userIn[0].toLowerCase()) {
+
+                            //Collection ops
                             case "createcollection":
                                 System.out.println("Name your collection: ");
                                 command = input.nextLine();
@@ -138,6 +165,8 @@ public class PlainTextInter {
                             case "modifycollectionname":
                                 CollectionOps.ModifyCollectionName(uidLoggedIn, conn);
                                 break;    
+
+                            //Movie Ops
                             case "search":
                                 System.out.println("Enter Username or ID to search for:");
                                 command = input.nextLine();
@@ -147,6 +176,37 @@ public class PlainTextInter {
                                     System.out.println("Username DNE. Try again.");
                                 }
                                 break;
+                            case "rate":
+                                System.out.println("Enter movie you would like to rate");
+                                String movieName = input.nextLine();
+
+                                System.out.println("Enter its rating");
+                                int rating = Integer.parseInt(input.nextLine());
+
+                                MovieOps.rate(rating, movieName, conn);
+
+                                break;
+                            case "watch":
+                                System.out.println("Would you like to watch a movie or a collection?");
+                                String choice = input.nextLine();
+                                if(choice.toLowerCase().equals("movie")){
+                                    System.out.println("Enter name of movie you would like to watch");
+                                    movieName = input.nextLine();
+                                    MovieOps.watch(movieName, conn, uidLoggedIn);
+
+                                }
+                                else if(choice.toLowerCase().equals("collection")){
+                                    System.out.println("Enter name of collection you would like to watch");
+                                    String collectionName = input.nextLine();
+                                    // ADD ANOTHER WATCH FUNCTION!!
+                                }
+                                else{
+                                    System.out.println("Choice not recognized");
+                                }
+                                
+                                break;
+                            
+                            // User Ops
                             case "follow":
                                 System.out.println("Enter ID to follow:");
                                 String userIDtoFollow = input.nextLine();

@@ -77,7 +77,7 @@ public class MovieOps {
 
 }
 
-    public static void watch(String movie,Connection conn, String userID) {
+    public static void watch(String movie,Connection conn, int userID) {
 
          String search = "SELECT MovieID FROM movies WHERE movie = ?";
         try (PreparedStatement stmt = conn.prepareStatement(search)){
@@ -88,7 +88,7 @@ public class MovieOps {
                 int movieID = resultset.getInt("MovieID");
                 String insertWatched = "INSERT INTO watched_movies (user_id, movie_id) VALUES (?, ?)";
                     try (PreparedStatement insertStmt = conn.prepareStatement(insertWatched)) {
-                        insertStmt.setInt(1, Integer.parseInt(userID));
+                        insertStmt.setInt(1, userID);
                         insertStmt.setInt(2, movieID);
                         insertStmt.executeUpdate();
                         System.out.println("Movie added to watched list.");
