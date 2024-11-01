@@ -124,13 +124,7 @@ public class PlainTextInter {
                                 CollectionOps.SeeCollectionAll(uidLoggedIn, conn);
                                 break;
                             case "search":
-                                System.out.println("Enter Username or ID to search for:");
-                                command = input.nextLine();
-                                if (MovieOps.search(command)) {
-                                    System.out.println("Username Exists.");
-                                } else {
-                                    System.out.println("Username DNE. Try again.");
-                                }
+                                MovieOps.search(conn);
                                 break;
                             case "follow":
                                 System.out.println("Enter ID to follow:");
