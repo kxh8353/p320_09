@@ -98,6 +98,7 @@ public class CollectionOps {
         }
     }
 
+    // Helper function for see all
     public static void SeeCollection(int collectionID, String name, Connection conn){
         // Get number of movies in collection
         int numMovies = 0;
@@ -160,15 +161,8 @@ public class CollectionOps {
     }
 
 
-    // public static void ChangeCollection(int uid, Connection conn){
-    //     String query = "UPDATE collections SET collectionID = ? AND name = ? AND uid = ?";
-    // }
-
-
     // Needs to be mapped
     public static void AddMovieToCollection(int uid, Connection conn){
-        //String query = "INSERT into collections (collectionID, name, uid) VALUES (?, ?, ?)";
-
         Scanner input = new Scanner(System.in);
 
         System.out.println("Enter name of collection you would like to add a movie to: ");
@@ -228,7 +222,6 @@ public class CollectionOps {
             e.printStackTrace();
         }
 
-
         //Add movieid and collection id to contains
         String query3 = "INSERT INTO contains (movieid, collectionid) VALUES (?, ?)";
 
@@ -241,7 +234,6 @@ public class CollectionOps {
             int rowsAffected = 0;
 
             while(rset.next()) {   // Move the cursor to the next row
-                movieID = rset.getInt("movieid");
                 rowsAffected++;
             }
 
@@ -261,7 +253,93 @@ public class CollectionOps {
 
     // Needs to be mapped
     public static void DeleteMovieFromCollection(int uid, Connection conn){
-        String query = "INSERT into collections (collectionID, name, uid) VALUES (?, ?, ?)";
+        //String query = "INSERT into collections (collectionID, name, uid) VALUES (?, ?, ?)";
+
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Enter name of collection you would like to remove a movie from: ");
+        String collectionName = input.nextLine();
+        int collectionID = -1;
+        int movieID = -1;
+
+
+        //Get collection id
+        String query = "SELECT * FROM collections WHERE uid = ? AND name = ?";
+
+        try (PreparedStatement viewStatement = conn.prepareStatement(query)){
+            viewStatement.setInt(1, uid);
+            viewStatement.setString(1, collectionName);
+
+            ResultSet rset = viewStatement.executeQuery();
+
+            int rowsAffected = 0;
+
+            while(rset.next()) {   // Move the cursor to the next row
+                collectionID = rset.getInt("collectionid");
+                rowsAffected++;
+            }
+
+            if (rowsAffected == 0) {
+                System.out.println("No collection with this name.");
+                return;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Get movie id
+        String query2 = "SELECT movieid FROM movies WHERE name = ?";
+        System.out.println("Enter name of the movie you would like to remove from the collection: ");
+        String movieName = input.nextLine();
+
+        try (PreparedStatement viewStatement = conn.prepareStatement(query2)){
+            viewStatement.setString(1, movieName);
+
+            ResultSet rset = viewStatement.executeQuery();
+
+            int rowsAffected = 0;
+
+            while(rset.next()) {   // Move the cursor to the next row
+                movieID = rset.getInt("movieid");
+                rowsAffected++;
+            }
+
+            if (rowsAffected == 0) {
+                System.out.println("No movie with this name.");
+                return;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //Add movieid and collection id to contains
+        String query3 = "DELETE FROM contains WHERE movieid = ? AND collectionid = ?";
+
+        try (PreparedStatement deleteStatement = conn.prepareStatement(query3)){
+            deleteStatement.setInt(1, movieID);
+            deleteStatement.setInt(2, collectionID);
+
+            ResultSet rset = deleteStatement.executeQuery();
+
+            int rowsAffected = 0;
+
+            while(rset.next()) {   // Move the cursor to the next row
+                rowsAffected++;
+            }
+
+            if (rowsAffected == 0) {
+                System.out.println("Deletion Unsuccesful.");
+                return;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Successfully inserted movie!");
+
     }
 
 
