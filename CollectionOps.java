@@ -176,7 +176,7 @@ public class CollectionOps {
 
         try (PreparedStatement viewStatement = conn.prepareStatement(query)){
             viewStatement.setInt(1, uid);
-            viewStatement.setString(1, collectionName);
+            viewStatement.setString(2, collectionName);
 
             ResultSet rset = viewStatement.executeQuery();
 
@@ -197,7 +197,7 @@ public class CollectionOps {
         }
 
         // Get movie id
-        String query2 = "SELECT movieid FROM movies WHERE name = ?";
+        String query2 = "SELECT movieid FROM movies WHERE title = ?";
         System.out.println("Enter name of the movie you would like to add to the collection: ");
         String movieName = input.nextLine();
 
@@ -343,7 +343,6 @@ public class CollectionOps {
     }
 
 
-    //Needs to be mapped to PTUI
     public static void DeleteMovieCollection(int uid, Connection conn){
         Scanner input = new Scanner(System.in);
 
@@ -351,16 +350,17 @@ public class CollectionOps {
         String collectionName = input.nextLine();
         int collectionID = -1;
 
-        String query = "DELETE FROM collections WHERE name = ? AND uid = ?";
+//        String query = "DELETE FROM collections WHERE name = ? AND uid = ?";
+        String query = "SELECT collectionid FROM collections WHERE name = ?";
 
-        try (PreparedStatement deleteStatement = conn.prepareStatement(query)){
-            deleteStatement.setString(1, collectionName);
-            deleteStatement.setInt(2, uid);
+        try (PreparedStatement selectStatement = conn.prepareStatement(query)){
+            selectStatement.setString(1, collectionName);
+//            selectStatement.setInt(2, uid);
 
-            ResultSet rset = deleteStatement.executeQuery();
+            ResultSet rset = selectStatement.executeQuery();
             int rowsAffected = 0;
 
-            while(rset.next()) {   // Move the cursor to the next row
+            while(rset.next()) {   
                 collectionID = rset.getInt("collectionid");
                 rowsAffected++;
             }
@@ -375,24 +375,53 @@ public class CollectionOps {
             e.printStackTrace();
         }
 
+//        String query2 = "DELETE FROM contains WHERE collectionid = ?";
+//
+//        try (PreparedStatement deleteStatement = conn.prepareStatement(query2)){
+//            deleteStatement.setInt(1, collectionID);
+//
+//            ResultSet rset = deleteStatement.executeQuery();
+//            int rowsAffected = 0;
+//
+//            while(rset.next()) {   // Move the cursor to the next row
+//                rowsAffected++;
+//            }
+//
+//            if (rowsAffected == 0) {
+//                System.out.println("No references to this collection found within contains.");
+//                return;
+//            }
+//
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+
         String query2 = "DELETE FROM contains WHERE collectionid = ?";
+        try (PreparedStatement deleteContainsStatement = conn.prepareStatement(query2)) {
+            deleteContainsStatement.setInt(1, collectionID);
+            int rowsAffected = deleteContainsStatement.executeUpdate(); 
 
-        try (PreparedStatement deleteStatement = conn.prepareStatement(query2)){
-            deleteStatement.setInt(1, collectionID);
-
-            ResultSet rset = deleteStatement.executeQuery();
-            int rowsAffected = 0;
-
-            while(rset.next()) {   // Move the cursor to the next row
-                rowsAffected++;
-            }
-
-            if (rowsAffected == 0) {
+            if (rowsAffected > 0) {
+                System.out.println("References to this collection have been deleted from contains.");
+            } else {
                 System.out.println("No references to this collection found within contains.");
-                return;
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
+        // deleting collection itself
+        String query3 = "DELETE FROM collections WHERE collectionid = ?";
+        try (PreparedStatement deleteCollectionStatement = conn.prepareStatement(query3)) {
+            deleteCollectionStatement.setInt(1, collectionID);
+            int rowsAffected = deleteCollectionStatement.executeUpdate(); // Use executeUpdate here
 
+            if (rowsAffected > 0) {
+                System.out.println("Successfully deleted collection!");
+            } else {
+                System.out.println("Failed to delete the collection.");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

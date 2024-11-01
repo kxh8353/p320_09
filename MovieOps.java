@@ -1,102 +1,108 @@
+import java.sql.Connection;import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import java.util.Scanner;
+import com.jcraft.jsch.*;
+
+
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Locale;
-import java.util.Scanner;
+import java.sql.Statement;
+import java.util.Properties;
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 
 public class MovieOps {
 
-    public static void rate(int rating, String movie, Connection conn){
+    public static void rate(int rating, String movie, Connection conn) {
+
         //Rating has been checked for correctness, movie exists and user is logged in.
 
-    }
-    public static void search(Connection conn){
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Would you like to search by: name, release date, cast members, studio, or genre? ");
-        String input = sc.nextLine();
-        input.toLowerCase(Locale.ROOT);
-        if(input.equals("name")){
-            System.out.println("Enter the movie name: ");
-            input = sc.nextLine();
-            String Titlequery = "SELECT " +
-                    "    movies.movieid, " +
-                    "    movies.title, " +
-                    "    movies.lengthinminutes, " +
-                    "    movies.mpaa, " +
-                    "    casts.movieid, " +
-                    "    casts.contributorid, " +
-                    "    contributors.contributorid, " +
-                    "    contributors.firstname, " +
-                    "    contributors.lastname, " +
-                    "    directs.contributorid, " +
-                    "    rates.number_of_stars, " +
-                    "    genres.genreid, " +
-                    "    genres.name, " +
-                    "    platforms.platformid, " +
-                    "    released_on.date, " +
-                    "    released_on.platformid " +
-                    "FROM movies " +
-                    "LEFT JOIN directs ON movies.movieid = directs.movieid " +
-                    "LEFT JOIN casts ON movies.movieid = casts.movieid " +
-                    "LEFT JOIN contributors ON casts.contributorid = contributors.contributorid " +
-                    "LEFT JOIN rates ON movies.movieid = rates.movieid " +
-                    "LEFT JOIN has_genre ON movies.movieid = has_genre.movieid " +
-                    "LEFT JOIN genre ON has_genre.genreid = genre.genreid " +
-                    "LEFT JOIN released_on ON movies.movieid = released_on.movieid " +
-                    "LEFT JOIN platform ON released_on.platformid = platform.platformid " +
-                    "WHERE movies.title = ?";
-            try (PreparedStatement checktitlequery = conn.prepareStatement(Titlequery)){
-                checktitlequery.setString(1, input);
-                ResultSet rs = checktitlequery.executeQuery();
-                if (!rs.isBeforeFirst()) { // Checks if the result set is empty
-                    System.out.println("No movies found with the title: " + input);
+        String search = "SELECT uid FROM movies WHERE movie = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(search)) {
+            stmt.setString(1, movie);
+            ResultSet resultset = stmt.executeQuery();
+
+            if (resultset.next()) {
+                int uid = resultset.getInt("uid");
+
+                // Assuming you want to insert a rating for this movie if it exists
+                String insertRating = "INSERT INTO ratings (uid, rating) VALUES (?, ?)";
+                try (PreparedStatement insertStmt = conn.prepareStatement(insertRating)) {
+                    insertStmt.setInt(1, uid);
+                    insertStmt.setInt(2, rating);
+                    insertStmt.executeUpdate();
+                    System.out.println("Rating added successfully.");
                 }
-                else{
-                    String title = rs.getString("title");
-                    int length = rs.getInt("lengthinminutes");
-                    String MPAA = rs.getString("mpaa");
-                    System.out.println("Title: " + title + " Length: " + length + " MPAA: " + MPAA);
-                    while (rs.next()) {
-                        String contributors = rs.getString("firstname")+ " " + rs.getString("lastname");
-                        System.out.println("Contributors: " + contributors);
-                    }
-                    int directorID = Integer.parseInt(rs.getString("contributorid"));
-                    String directorName = rs.getString("firstname")+ " " + rs.getString("lastname");
-                    System.out.println("Director: " + directorName + " " + directorID);
-                    while (rs.next()) {
-                        int rating = rs.getInt("number_of_stars");
-                        System.out.println("Rating: " + rating);
-                    }
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+
+            } else {
+                System.out.println("movie does not exist.");//?SHOULD NOT HAPPEN
+
             }
-        }
-        else if(input.equals("cast")){
-            System.out.println("Enter the cast member: ");
-            input = sc.nextLine();
-        }
-        else if(input.equals("studio")){
-            System.out.println("Enter the studio name: ");
-            input = sc.nextLine();
-        }
-        else if(input.equals("genre")){
-            System.out.println("Enter the genre: ");
-            input = sc.nextLine();
-        }
-        else if(input.equals("release date")){
-            System.out.println("Enter the release date: ");
-            input = sc.nextLine();
-        }
-        else{
-            System.out.println("Invalid input");
-            return;
-        }
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void watch(String movie) {
+
+    public static boolean search(String username, Connection conn) {
+        //ptui handles the output, this should just determine if username exists
+        // and return true or false. String username can be a username or a userID
+        String search = "SELECT username FROM users WHERE username = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(search)) {
+            stmt.setString(1, username);
+            ResultSet resultset = stmt.executeQuery();
+
+            if (resultset.next()) {
+
+                System.out.println("Username found");
+                return true;
+            } else {
+                System.out.println("Username does not exist.");
+                return false;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+
+}
+
+    public static void watch(String movie,Connection conn, String userID) {
+
+         String search = "SELECT MovieID FROM movies WHERE movie = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(search)){
+            stmt.setString(1, movie);
+            ResultSet resultset = stmt.executeQuery();
+
+            if (resultset.next()){
+                int movieID = resultset.getInt("MovieID");
+                String insertWatched = "INSERT INTO watched_movies (user_id, movie_id) VALUES (?, ?)";
+                    try (PreparedStatement insertStmt = conn.prepareStatement(insertWatched)) {
+                        insertStmt.setInt(1, Integer.parseInt(userID));
+                        insertStmt.setInt(2, movieID);
+                        insertStmt.executeUpdate();
+                        System.out.println("Movie added to watched list.");
+            }
+
+                }else{
+                    System.out.println("Movie does not exist.");
+
+                }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
         //movie exists, user is logged in
     }
 }
+
