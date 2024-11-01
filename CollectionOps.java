@@ -24,7 +24,7 @@ public class CollectionOps {
         Statement stmt;
         try {
             stmt = conn.createStatement();
-            String strSelect = "insert query here";
+            String strSelect = "INSERT into collections (collectionID, name, uid) VALUES (?, ?, ?)";
             // ResultSet rset = stmt.executeQuery(strSelect);
 
             // while(rset.next()) {   // Move the cursor to the next row
