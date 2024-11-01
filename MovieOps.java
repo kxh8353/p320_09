@@ -19,13 +19,13 @@ public class MovieOps {
             ResultSet resultset = stmt.executeQuery();
 
             if (resultset.next()) {
-                int uid = resultset.getInt("movieId");
+                int movieid = resultset.getInt("movieId");
 
 
 
                 String insertRating = "INSERT INTO rates (uid, number_of_stars) VALUES (?, ?)";
                 try (PreparedStatement insertStmt = conn.prepareStatement(insertRating)) {
-                    insertStmt.setInt(1, uid);
+                    insertStmt.setInt(1, movieid);
                     insertStmt.setInt(2, rating);
                     insertStmt.executeUpdate();
                     System.out.println("Rating added successfully.");
