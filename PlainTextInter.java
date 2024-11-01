@@ -65,6 +65,7 @@ public class PlainTextInter {
                 Scanner input = new Scanner(System.in);
                 String[] userIn;
                 boolean logined = false;
+                int uidLoggedIn = -1;
                 boolean quit = false;
 
                 while (!quit) {
@@ -92,8 +93,10 @@ public class PlainTextInter {
                         System.out.println(" 'Logout' ");
                         System.out.println(" 'Exit' ");
                     } else if (userIn[0].equalsIgnoreCase("Login") && !logined) {
-                        if (AccountOps.handlelogin(conn)) {
+                        int result = AccountOps.handlelogin(conn);
+                        if (result !=1) {
                             logined = true; // login successful
+                            uidLoggedIn = result;
                             System.out.println("Logged in");
                         } else {
                             System.out.println("Login failed. Please try again.");
@@ -115,10 +118,10 @@ public class PlainTextInter {
                             case "createcollection":
                                 System.out.println("Name your collection: ");
                                 command = input.nextLine();
-                                CollectionOps.CreateCollection(command, conn);
+                                CollectionOps.CreateCollection(command, uidLoggedIn, conn);
                                 break;
                             case "seecollection":
-                                CollectionOps.SeeCollection(conn);
+                                CollectionOps.SeeCollectionAll(uidLoggedIn, conn);
                                 break;
                             case "search":
                                 System.out.println("Enter Username or ID to search for:");

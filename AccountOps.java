@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class AccountOps {
 
-    static boolean handlelogin(Connection conn){
+    static int handlelogin(Connection conn){
         Scanner scanner = new Scanner(System.in);
         System.out.println("welcome to MovieMatrix, let's help you log in");
 
@@ -22,20 +22,21 @@ public class AccountOps {
                 String username = userIn[1];
                 String password = userIn[2];
 
-                if (login(conn, username, password)){
-                    return true;
+                int result = login(conn, username, password);
+                if (result != -1){
+                    return result;
                 } else {
                     System.out.println("Login failed. please try again");
                 }
             }else {
                 System.out.println("Unknown command or incorrect usage. Please use 'Login <username> <password>'");
-                return false;
+                return -1;
             }
         }
     }
 
-    static boolean login(Connection conn, String username, String password){
-        String query = "SELECT password FROM users WHERE username = ?";
+    static int login(Connection conn, String username, String password){
+        String query = "SELECT password, uid FROM users WHERE username = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)){
             stmt.setString(1, username);
@@ -43,9 +44,10 @@ public class AccountOps {
 
             if (resultset.next()){
                 String storedPassword = resultset.getString("password");
+                int uid = resultset.getInt("uid");
                 if (storedPassword.equals(password)){
                     System.out.println("Login successful for user: " + username);
-                    return true;
+                    return uid;
                 }else{
                     System.out.println("Login failed. incorrect password");
                 }
@@ -55,7 +57,7 @@ public class AccountOps {
         } catch (SQLException e){
             e.printStackTrace();
         }
-        return false;
+        return -1;
     }
 
     static void createAccount(Connection conn, String username, String password, String firstname, String lastname) {
