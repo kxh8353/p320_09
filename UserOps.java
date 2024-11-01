@@ -70,7 +70,7 @@ public class UserOps {
         String thisuser = scanner.nextLine();
 
 
-        String followQuery = "DELETE FROM follows WHERE followerID = ? AND followeeID = ?";
+        String followQuery = "DELETE FROM follows WHERE follower = ? AND followee = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(followQuery)) {
             stmt.setInt(1, Integer.parseInt(thisuser));
