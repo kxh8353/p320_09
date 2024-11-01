@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.io.BufferedReader;
 import java.io.FileReader;
-
 public class PlainTextInter {
 
     public static void main(String[] args) throws SQLException {
@@ -142,7 +141,7 @@ public class PlainTextInter {
                             case "search":
                                 System.out.println("Enter Username or ID to search for:");
                                 command = input.nextLine();
-                                if (MovieOps.search(command)) {
+                                if (MovieOps.search(command,conn)) {
                                     System.out.println("Username Exists.");
                                 } else {
                                     System.out.println("Username DNE. Try again.");
