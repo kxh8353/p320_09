@@ -93,25 +93,24 @@ public class PlainTextInter {
                         System.out.println(" 'Exit' ");
                     } else if (userIn[0].equalsIgnoreCase("Login") && !logined) {
                         if (AccountOps.handlelogin(conn)) {
-                            logined = true; // Successful login
+                            logined = true; // login successful
                             System.out.println("Logged in");
                         } else {
                             System.out.println("Login failed. Please try again.");
                         }
                     } else if (userIn[0].equalsIgnoreCase("Logout") && logined) {
-                        logined = false; // Log out the user
+                        logined = false; 
                         System.out.println("Logged out successfully.");
                     } else if (userIn[0].equalsIgnoreCase("CreateAccount") && !logined) {
                         System.out.print("\nEnter in the format: CreateAccount <username> <password> <firstname> <lastname>");
                         command = input.nextLine();
                         userIn = command.split(" ");
-                        if (userIn.length == 4) { // Ensure the correct number of arguments
-                            AccountOps.createAccount(conn, userIn[0], userIn[1], userIn[2], userIn[3]);
+                        if (userIn.length == 5) { 
+                            AccountOps.createAccount(conn, userIn[1], userIn[2], userIn[3], userIn[4]);
                         } else {
                             System.out.println("Invalid format. Please try again.");
                         }
                     } else if (logined) {
-                        // Handle commands for logged-in users
                         switch (userIn[0].toLowerCase()) {
                             case "createcollection":
                                 System.out.println("Name your collection: ");
@@ -142,7 +141,7 @@ public class PlainTextInter {
                                 UserOps.unfollowUsers(conn, userIDtoUnfollow);
                                 break;
                             case "exit":
-                                quit = true; // Exit the program
+                                quit = true; 
                                 break;
                             default:
                                 System.out.println("Invalid command; Try again");

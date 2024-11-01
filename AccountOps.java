@@ -82,24 +82,24 @@ public class AccountOps {
                     System.out.println("usernamecount: " + usernameCount);
                     if (usernameCount > 0) {
                         System.out.println("Username already exists.");
-                        return; // Handle existing username case
+                        return; 
                     }
                 }
             }
 
-            // Check for unique ID
+            // check for unique ID
             while (true) {
                 checkIdStatement.setInt(1, incrementID);
                 try (ResultSet rs = checkIdStatement.executeQuery()) {
                     if (rs.next()) {
                         int idCount = rs.getInt(1);
                         if (idCount == 0) {
-                            newId = incrementID; // Found a unique ID
+                            newId = incrementID; // unique ID found
                             break;
                         }
                     }
                 }
-                incrementID++; // Increment to check the next ID
+                incrementID++; // increment to check the next ID
             }
 
             System.out.println("New ID generated: " + newId);
