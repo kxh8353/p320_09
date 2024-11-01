@@ -20,6 +20,7 @@ import java.io.FileReader;
 
 public class CollectionOps {
 
+    // Tested
     public static void CreateCollection(String name, int uid, Connection conn){
         int minimumPermittedID = 2500;
         int incrementID = minimumPermittedID;
@@ -68,6 +69,7 @@ public class CollectionOps {
     }
 
 
+    // Tested
     public static void SeeCollectionAll(int uid, Connection conn){
         String query = "SELECT * FROM collections WHERE uid = ? ORDER BY name";
 
@@ -161,7 +163,7 @@ public class CollectionOps {
     }
 
 
-    // Needs to be mapped
+    // Tested
     public static void AddMovieToCollection(int uid, Connection conn){
         Scanner input = new Scanner(System.in);
 
@@ -222,14 +224,15 @@ public class CollectionOps {
             e.printStackTrace();
         }
 
-        //Add movieid and collection id to contains
-        String query3 = "INSERT INTO contains (movieid, collectionid) VALUES (?, ?)";
 
-        try (PreparedStatement insertStatement = conn.prepareStatement(query3)){
-            insertStatement.setInt(1, movieID);
-            insertStatement.setInt(2, collectionID);
+        // Check movie is not already in collection
+        String query4 = "SELECT * FROM contains WHERE collectionid = ? and movieid = ?";
 
-            ResultSet rset = insertStatement.executeQuery();
+        try (PreparedStatement viewStatement = conn.prepareStatement(query4)){
+            viewStatement.setInt(1, collectionID);
+            viewStatement.setInt(2, movieID);
+
+            ResultSet rset = viewStatement.executeQuery();
 
             int rowsAffected = 0;
 
@@ -237,8 +240,8 @@ public class CollectionOps {
                 rowsAffected++;
             }
 
-            if (rowsAffected == 0) {
-                System.out.println("Insertion Unsuccesful.");
+            if (rowsAffected != 0) {
+                System.out.println("This movie is already in the collection.");
                 return;
             }
 
@@ -246,12 +249,33 @@ public class CollectionOps {
             e.printStackTrace();
         }
 
-        System.out.println("Successfully inserted movie!");
+
+        //Add movieid and collection id to contains
+        String query3 = "INSERT INTO contains (movieid, collectionid) VALUES (?, ?)";
+
+        try (PreparedStatement insertStatement = conn.prepareStatement(query3)){
+            insertStatement.setInt(1, movieID);
+            insertStatement.setInt(2, collectionID);
+
+            int rowsAffected = insertStatement.executeUpdate();
+            
+            if (rowsAffected == 0) {
+                System.out.println("Insertion Unsuccesful.");
+                return;
+            }
+            else{
+                System.out.println("Successfully inserted movie!");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
 
-    // Needs to be mapped
+    // Tested
     public static void DeleteMovieFromCollection(int uid, Connection conn){
 
         Scanner input = new Scanner(System.in);
@@ -288,7 +312,7 @@ public class CollectionOps {
         }
 
         // Get movie id
-        String query2 = "SELECT movieid FROM movies WHERE name = ?";
+        String query2 = "SELECT movieid FROM movies WHERE title = ?";
         System.out.println("Enter name of the movie you would like to remove from the collection: ");
         String movieName = input.nextLine();
 
@@ -313,14 +337,15 @@ public class CollectionOps {
             e.printStackTrace();
         }
 
-        //remove movieid and collection id to contains
-        String query3 = "DELETE FROM contains WHERE movieid = ? AND collectionid = ?";
 
-        try (PreparedStatement deleteStatement = conn.prepareStatement(query3)){
-            deleteStatement.setInt(1, movieID);
-            deleteStatement.setInt(2, collectionID);
+        //Check if movie is in collection
+        String query4 = "SELECT * FROM contains WHERE movieid = ? AND collectionid = ?";
 
-            ResultSet rset = deleteStatement.executeQuery();
+        try (PreparedStatement viewStatement = conn.prepareStatement(query4)){
+            viewStatement.setInt(1, movieID);
+            viewStatement.setInt(2, collectionID);
+
+            ResultSet rset = viewStatement.executeQuery();
 
             int rowsAffected = 0;
 
@@ -329,7 +354,7 @@ public class CollectionOps {
             }
 
             if (rowsAffected == 0) {
-                System.out.println("Deletion Unsuccesful.");
+                System.out.println("This movie is already not in the collection.");
                 return;
             }
 
@@ -337,11 +362,34 @@ public class CollectionOps {
             e.printStackTrace();
         }
 
-        System.out.println("Successfully inserted movie!");
+
+        //remove movieid and collection id to contains
+        String query3 = "DELETE FROM contains WHERE movieid = ? AND collectionid = ?";
+
+        try (PreparedStatement deleteStatement = conn.prepareStatement(query3)){
+            deleteStatement.setInt(1, movieID);
+            deleteStatement.setInt(2, collectionID);
+
+            int rowsAffected = deleteStatement.executeUpdate();
+
+            if (rowsAffected == 0) {
+                System.out.println("Movie was not removed.");
+                return;
+            }
+            else{
+                System.out.println("Successfully removed movie!");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        
 
     }
 
 
+    // Tested
     public static void DeleteMovieCollection(int uid, Connection conn){
         Scanner input = new Scanner(System.in);
 
@@ -349,7 +397,6 @@ public class CollectionOps {
         String collectionName = input.nextLine();
         int collectionID = -1;
 
-//        String query = "DELETE FROM collections WHERE name = ? AND uid = ?";
         String query = "SELECT collectionid FROM collections WHERE name = ? AND uid = ?";
 
         try (PreparedStatement selectStatement = conn.prepareStatement(query)){
@@ -409,7 +456,7 @@ public class CollectionOps {
     }
 
 
-    //Needs to be mapped
+    // Tested
     public static void ModifyCollectionName(int uid, Connection conn){
 
         Scanner input = new Scanner(System.in);
