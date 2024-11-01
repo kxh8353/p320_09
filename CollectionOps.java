@@ -39,23 +39,23 @@ public class CollectionOps {
     }
 
     public static void SeeCollection(Connection conn){
-
+        String query = "SELECT * FROM collections WHERE collectionID = ? AND name = ? AND uid = ?";
     }
 
     public static void ChangeCollection(Connection conn){
-
+        String query = "UPDATE collections SET collectionID = ? AND name = ? AND uid = ?";
     }
 
     public static void AddMovieCollection(Connection conn){
-
+        String query = "INSERT into collections (collectionID, name, uid) VALUES (?, ?, ?)";
     }
 
     public static void DeleteMovieCollection(Connection conn){
-
+        String query = "DELETE FROM collections WHERE collectionID = ? AND name = ? AND uid = ?";
     }
 
     public static void ModifyCollectionName(Connection conn){
-
+        String query = "UPDATE collections SET name = ?";
     }
 
 }
