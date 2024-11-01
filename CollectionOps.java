@@ -253,7 +253,6 @@ public class CollectionOps {
 
     // Needs to be mapped
     public static void DeleteMovieFromCollection(int uid, Connection conn){
-        //String query = "INSERT into collections (collectionID, name, uid) VALUES (?, ?, ?)";
 
         Scanner input = new Scanner(System.in);
 
@@ -268,7 +267,7 @@ public class CollectionOps {
 
         try (PreparedStatement viewStatement = conn.prepareStatement(query)){
             viewStatement.setInt(1, uid);
-            viewStatement.setString(1, collectionName);
+            viewStatement.setString(2, collectionName);
 
             ResultSet rset = viewStatement.executeQuery();
 
@@ -314,7 +313,7 @@ public class CollectionOps {
             e.printStackTrace();
         }
 
-        //Add movieid and collection id to contains
+        //remove movieid and collection id to contains
         String query3 = "DELETE FROM contains WHERE movieid = ? AND collectionid = ?";
 
         try (PreparedStatement deleteStatement = conn.prepareStatement(query3)){
@@ -351,11 +350,11 @@ public class CollectionOps {
         int collectionID = -1;
 
 //        String query = "DELETE FROM collections WHERE name = ? AND uid = ?";
-        String query = "SELECT collectionid FROM collections WHERE name = ?";
+        String query = "SELECT collectionid FROM collections WHERE name = ? AND uid = ?";
 
         try (PreparedStatement selectStatement = conn.prepareStatement(query)){
             selectStatement.setString(1, collectionName);
-//            selectStatement.setInt(2, uid);
+            selectStatement.setInt(2, uid);
 
             ResultSet rset = selectStatement.executeQuery();
             int rowsAffected = 0;
@@ -375,27 +374,6 @@ public class CollectionOps {
             e.printStackTrace();
         }
 
-//        String query2 = "DELETE FROM contains WHERE collectionid = ?";
-//
-//        try (PreparedStatement deleteStatement = conn.prepareStatement(query2)){
-//            deleteStatement.setInt(1, collectionID);
-//
-//            ResultSet rset = deleteStatement.executeQuery();
-//            int rowsAffected = 0;
-//
-//            while(rset.next()) {   // Move the cursor to the next row
-//                rowsAffected++;
-//            }
-//
-//            if (rowsAffected == 0) {
-//                System.out.println("No references to this collection found within contains.");
-//                return;
-//            }
-//
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
 
         String query2 = "DELETE FROM contains WHERE collectionid = ?";
         try (PreparedStatement deleteContainsStatement = conn.prepareStatement(query2)) {
@@ -412,9 +390,10 @@ public class CollectionOps {
         }
 
         // deleting collection itself
-        String query3 = "DELETE FROM collections WHERE collectionid = ?";
+        String query3 = "DELETE FROM collections WHERE collectionid = ? AND uid = ?";
         try (PreparedStatement deleteCollectionStatement = conn.prepareStatement(query3)) {
             deleteCollectionStatement.setInt(1, collectionID);
+            deleteCollectionStatement.setInt(2, uid);
             int rowsAffected = deleteCollectionStatement.executeUpdate(); // Use executeUpdate here
 
             if (rowsAffected > 0) {
