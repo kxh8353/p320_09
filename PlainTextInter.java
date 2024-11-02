@@ -177,7 +177,7 @@ public class PlainTextInter {
                                 System.out.println("Enter its rating");
                                 int rating = Integer.parseInt(input.nextLine());
 
-                                MovieOps.rate(rating, movieName, conn);
+                                MovieOps.rate(rating, movieName, uidLoggedIn, conn);
 
                                 break;
                             case "watch":

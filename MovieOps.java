@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class MovieOps {
 
-    public static void rate(int rating, String movie, Connection conn) {
+    public static void rate(int rating, String movie, int uid, Connection conn) {
 
         //Rating has been checked for correctness, movie exists and user is logged in.
 
@@ -19,14 +19,15 @@ public class MovieOps {
             ResultSet resultset = stmt.executeQuery();
 
             if (resultset.next()) {
-                int uid = resultset.getInt("movieId");
+                int movieID = resultset.getInt("movieId");
 
 
 
-                String insertRating = "INSERT INTO rates (uid, number_of_stars) VALUES (?, ?)";
+                String insertRating = "INSERT INTO rates (movieid, uid, number_of_stars) VALUES (?, ?)";
                 try (PreparedStatement insertStmt = conn.prepareStatement(insertRating)) {
-                    insertStmt.setInt(1, uid);
-                    insertStmt.setInt(2, rating);
+                    insertStmt.setInt(1, movieID);
+                    insertStmt.setInt(2, uid);
+                    insertStmt.setInt(3, rating);
                     insertStmt.executeUpdate();
                     System.out.println("Rating added successfully.");
                 }
