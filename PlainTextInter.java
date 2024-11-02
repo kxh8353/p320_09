@@ -87,6 +87,7 @@ public class PlainTextInter {
                         //Account ops
                         System.out.println(" 'Login' ");
                         System.out.println(" 'CreateAccount' ");
+                        System.out.println(" 'AddEmailToAccount'");
 
                         //Collection ops
                         System.out.println(" 'CreateCollection' ");
@@ -144,7 +145,13 @@ public class PlainTextInter {
                     } else if (logined) {
                         switch (userIn[0].toLowerCase()) {
 
-                            //Collection ops
+                            //Account Ops
+                            case "addemailtoaccount":
+                                AccountOps.addUserEmail(uidLoggedIn, conn);
+                                break;
+
+
+                            //Collection Ops
                             case "createcollection":
                                 System.out.println("Name your collection: ");
                                 command = input.nextLine();
@@ -166,6 +173,7 @@ public class PlainTextInter {
                                 CollectionOps.ModifyCollectionName(uidLoggedIn, conn);
                                 break;    
 
+
                             //Movie Ops
                             case "search":
                                 MovieOps.search(conn);
@@ -178,7 +186,6 @@ public class PlainTextInter {
                                 int rating = Integer.parseInt(input.nextLine());
 
                                 MovieOps.rate(rating, movieName, uidLoggedIn, conn);
-
                                 break;
                             case "watch":
                                 System.out.println("Would you like to watch a movie or a collection?");
@@ -195,9 +202,9 @@ public class PlainTextInter {
                                 else{
                                     System.out.println("Choice not recognized");
                                 }
-                                
                                 break;
                             
+
                             // User Ops
                             case "follow":
                                 System.out.println("Enter ID to follow:");
@@ -217,6 +224,7 @@ public class PlainTextInter {
                                 System.out.println("Invalid command; Try again");
                                 break;
                         }
+
                     } else {
                         System.out.println("You must be logged in to perform this action.");
                     }

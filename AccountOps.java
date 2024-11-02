@@ -62,8 +62,6 @@ public class AccountOps {
     }
 
     static void createAccount(Connection conn, String username, String password, String firstname, String lastname) {
-
-
         username = username.trim();
         int usernameCount = 0;
 
@@ -134,5 +132,55 @@ public class AccountOps {
             e.printStackTrace();
         }
     }
+
+    public static void addUserEmail(int uid, Connection conn){
+        
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter email you would like to add to account");
+        String email = scanner.nextLine();
+
+        
+        String query = "SELECT * FROM emails WHERE email = ? AND uid = ?";
+
+        try (PreparedStatement viewStatement = conn.prepareStatement(query)){
+            viewStatement.setString(1, email);
+            viewStatement.setInt(2, uid);
+
+            ResultSet rset = viewStatement.executeQuery();
+
+            int rowsAffected = 0;
+
+            while(rset.next()) {   // Move the cursor to the next row
+                rowsAffected++;
+            }
+
+            if (rowsAffected != 0) {
+                System.out.println("This email is already associated with this user.");
+                return;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String query2 = "INSERT INTO emails (email, uid) VALUES (?, ?)";
+        try (PreparedStatement insertStatement = conn.prepareStatement(query2)){
+            insertStatement.setString(1, email);
+            insertStatement.setInt(2, uid);
+
+            int rowsAffected = insertStatement.executeUpdate();
+
+            if (rowsAffected == 0) {
+                System.out.println("Email not inserted.");
+                return;
+            }
+            else{
+                System.out.println("Email successfully inserted");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 }
