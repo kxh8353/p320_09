@@ -68,8 +68,8 @@ public class AccountOps {
         try (PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
             LocalDateTime currentTime = LocalDateTime.now();
 
-            stmt.setTimestamp(1, Timestamp.valueOf(currentTime));  // Set current timestamp
-            stmt.setInt(2, uid);  // Set the user ID
+            stmt.setTimestamp(1, Timestamp.valueOf(currentTime));  
+            stmt.setInt(2, uid);  
 
             stmt.executeUpdate();
             System.out.println("Login time recorded for user ID: " + uid + " at " + currentTime);
