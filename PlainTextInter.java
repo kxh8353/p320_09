@@ -113,7 +113,7 @@ public class PlainTextInter {
                     // Login
                     } else if (userIn[0].equalsIgnoreCase("Login") && !logined) {
                         int result = AccountOps.handlelogin(conn);
-                        if (result !=1) {
+                        if (result !=-1) {
                             logined = true; // login successful
                             uidLoggedIn = result;
                             System.out.println("Logged in");

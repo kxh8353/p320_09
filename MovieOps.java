@@ -2,6 +2,7 @@ import java.sql.*;
 
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -785,29 +786,83 @@ public class MovieOps {
 
 public static void watch(String movie,Connection conn, int userID) {
 
-    String search = "SELECT MovieID FROM movies WHERE title = ?";
+    String search = "SELECT * FROM movies WHERE title = ?";
+    int movieid = -1;
+    String movieTitle = "";
     try (PreparedStatement stmt = conn.prepareStatement(search)){
         stmt.setString(1, movie);
         ResultSet resultset = stmt.executeQuery();
 
-        if (resultset.next()){
-            int movieID = resultset.getInt("MovieID");
-            String insertWatched = "INSERT INTO watched (movieid, uid) VALUES (?, ?)";
-            try (PreparedStatement insertStmt = conn.prepareStatement(insertWatched)) {
-                insertStmt.setInt(1, movieID);
-                insertStmt.setInt(2, userID);
-                insertStmt.executeUpdate();
-                System.out.println("Movie added to watched list.");
-            }
+        int rowsAffected = 0;
 
-        }else{
+        while(resultset.next()){
+            rowsAffected++;
+            movieid = resultset.getInt("MovieID");
+            movieTitle = resultset.getString("title");
+    
+        }
+        
+        if(rowsAffected==0){
             System.out.println("Movie does not exist.");
-
+            return;
         }
 
         } catch (SQLException e){
             e.printStackTrace();
         }
+
+
+        // Get total length in minutes
+        int totalLengthofMovie = 0;
+    
+        //Get total length in minutes
+        String movieLengthQuery = "SELECT lengthinminutes FROM movies WHERE movieid = ?";
+        try (PreparedStatement movieStatement = conn.prepareStatement(movieLengthQuery)){
+            movieStatement.setInt(1, movieid);
+
+            int rowsAffected = 0;
+            ResultSet rset = movieStatement.executeQuery();
+            while(rset.next()) { 
+                totalLengthofMovie= rset.getInt("lengthinminutes");
+                rowsAffected++;
+            }
+
+            if(rowsAffected==0){
+                System.out.println("Error in getting movie length");
+                return;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        String insertWatched = "INSERT INTO watched (movieid, uid, start_time, end_time) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement insertStmt = conn.prepareStatement(insertWatched)) {
+            insertStmt.setInt(1, movieid);
+            insertStmt.setInt(2, userID);
+
+            LocalDateTime endTime = LocalDateTime.now();
+
+            LocalDateTime startTime = endTime.minusHours(totalLengthofMovie/60);
+            startTime = startTime.minusMinutes(totalLengthofMovie%90);
+            
+            insertStmt.setTimestamp(3, Timestamp.valueOf(startTime));
+            insertStmt.setTimestamp(4, Timestamp.valueOf(endTime));
+            
+
+            int rowsAffected = insertStmt.executeUpdate();
+            if(rowsAffected ==0){
+                System.out.println("Unsuccesfully watched movie");
+            }
+            else{
+                System.out.println("Movie added to watched list: " + movieTitle);
+            }
+        
+            
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
         //movie exists, user is logged in
     }
 
@@ -853,26 +908,35 @@ public static void watch(String movie,Connection conn, int userID) {
             viewStatement.setInt(1, collectionID);
 
             ResultSet rset = viewStatement.executeQuery();
+            int rowsAffected = 0;
 
             while(rset.next()) {   // Move the cursor to the next row
                 int movieId = rset.getInt("movieid");
+                rowsAffected++;
 
                 //Get movie name
                 String query3 = "SELECT title FROM movies WHERE movieid = ?";
                 try (PreparedStatement movieStatement = conn.prepareStatement(query3)){
                     movieStatement.setInt(1, movieId);
 
+                    int rowsAffectedInner = 0;
                     ResultSet rset2 = movieStatement.executeQuery();
                     while(rset2.next()) { 
                         String movieTitle = rset2.getString("title");
-
+                        rowsAffectedInner++;
                         watch(movieTitle, conn, uid);
 
+                    }
+                    if(rowsAffectedInner == 0){
+                        System.out.println("Movie titles could not be found");
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
 
+            }
+            if(rowsAffected == 0){
+                System.out.println("There are no movies in this collection");
             }
         
         } catch (SQLException e) {
