@@ -297,6 +297,7 @@ public class CollectionOps {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        input.close();
 
 
     }
@@ -410,9 +411,7 @@ public class CollectionOps {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        
-
+        input.close();
     }
 
 
@@ -480,6 +479,7 @@ public class CollectionOps {
         }
 
         System.out.println("Successfully deleted collection!");
+        input.close();
     }
 
 
@@ -534,6 +534,7 @@ public class CollectionOps {
             e.printStackTrace();
         }
         System.out.println("Successfully modified collection name!");
+        input.close();
 
     }
 

@@ -229,6 +229,7 @@ public class MovieOps {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            scanner.close();
         }
         else if (input.equals("release date")) {
             System.out.println("Enter the release date (YYYY-MM-DD): ");
@@ -906,6 +907,7 @@ public static void watch(String movie,Connection conn, int userID) {
                 System.out.println("No collection with this name.");
                 return;
             }
+            
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -952,12 +954,7 @@ public static void watch(String movie,Connection conn, int userID) {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
-
-
-
+        input.close();
    }
-
 }
 

@@ -33,6 +33,7 @@ public class AccountOps {
                 System.out.println("Unknown command or incorrect usage. Please use 'Login <username> <password>'");
                 return -1;
             }
+        scanner.close();
         }
     }
 
