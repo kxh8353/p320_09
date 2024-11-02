@@ -810,5 +810,80 @@ public class MovieOps {
         }
         //movie exists, user is logged in
     }
+
+
+    public static void watchCollection(Connection conn, int uid) {
+
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Enter name of collection you would like to watch: ");
+        String collectionName = input.nextLine();
+        int collectionID = -1;
+
+
+        //Get collection id and confirm collection exists
+        String query1 = "SELECT * FROM collections WHERE uid = ? AND name = ?";
+
+        try (PreparedStatement viewStatement = conn.prepareStatement(query1)){
+            viewStatement.setInt(1, uid);
+            viewStatement.setString(2, collectionName);
+
+            ResultSet rset = viewStatement.executeQuery();
+
+            int rowsAffected = 0;
+
+            while(rset.next()) {   // Move the cursor to the next row
+                collectionID = rset.getInt("collectionid");
+                rowsAffected++;
+            }
+
+            if (rowsAffected == 0) {
+                System.out.println("No collection with this name.");
+                return;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        String query2 = "SELECT movieid FROM contains WHERE collectionid = ?";
+
+        try (PreparedStatement viewStatement = conn.prepareStatement(query2)){
+            viewStatement.setInt(1, collectionID);
+
+            ResultSet rset = viewStatement.executeQuery();
+
+            while(rset.next()) {   // Move the cursor to the next row
+                int movieId = rset.getInt("movieid");
+
+                //Get movie name
+                String query3 = "SELECT title FROM movies WHERE movieid = ?";
+                try (PreparedStatement movieStatement = conn.prepareStatement(query3)){
+                    movieStatement.setInt(1, movieId);
+
+                    ResultSet rset2 = movieStatement.executeQuery();
+                    while(rset2.next()) { 
+                        String movieTitle = rset2.getString("title");
+
+                        watch(movieTitle, conn, uid);
+
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+   }
+
 }
 
