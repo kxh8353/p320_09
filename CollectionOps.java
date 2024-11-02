@@ -47,6 +47,33 @@ public class CollectionOps {
             e.printStackTrace();
         }
 
+
+        // Check if collection name duplicate
+        //Get collection id
+        String queryCheck = "SELECT * FROM collections WHERE name = ?";
+
+        try (PreparedStatement checkStatement = conn.prepareStatement(queryCheck)){
+            checkStatement.setString(1, name);
+
+            ResultSet rset = checkStatement.executeQuery();
+
+            int rowsAffected = 0;
+
+            while(rset.next()) {   // Move the cursor to the next row
+                rowsAffected++;
+            }
+
+            if (rowsAffected != 0) {
+                System.out.println("This collection name already exists.");
+                return;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+
         String insertQuery = "INSERT INTO collections (collectionid, name, uid) VALUES (?, ?, ?)";
 
         try (PreparedStatement insertStatement = conn.prepareStatement(insertQuery)){
