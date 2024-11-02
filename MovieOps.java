@@ -43,38 +43,6 @@ public class MovieOps {
         }
     }
 
-    // public static void rate(int rating, String movie, Connection conn) {
-
-    //     //Rating has been checked for correctness, movie exists and user is logged in.
-
-    //     String search = "SELECT uid FROM movies WHERE movie = ?";
-
-    //     try (PreparedStatement stmt = conn.prepareStatement(search)) {
-    //         stmt.setString(1, movie);
-    //         ResultSet resultset = stmt.executeQuery();
-
-    //         if (resultset.next()) {
-    //             int uid = resultset.getInt("uid");
-
-    //             // Assuming you want to insert a rating for this movie if it exists
-    //             String insertRating = "INSERT INTO ratings (uid, rating) VALUES (?, ?)";
-    //             try (PreparedStatement insertStmt = conn.prepareStatement(insertRating)) {
-    //                 insertStmt.setInt(1, uid);
-    //                 insertStmt.setInt(2, rating);
-    //                 insertStmt.executeUpdate();
-    //                 System.out.println("Rating added successfully.");
-    //             }
-
-    //         } else {
-    //             System.out.println("movie does not exist.");//?SHOULD NOT HAPPEN
-
-    //         }
-
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
-
 
     public static void search(Connection conn) {
         Scanner scanner = new Scanner(System.in);
