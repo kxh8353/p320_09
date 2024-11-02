@@ -48,6 +48,7 @@ public class AccountOps {
                 int uid = resultset.getInt("uid");
                 if (storedPassword.equals(password)){
                     System.out.println("Login successful for user: " + username);
+                    updateTimeLoggedIn(conn, uid);
                     return uid;
                 }else{
                     System.out.println("Login failed. incorrect password");
@@ -59,6 +60,22 @@ public class AccountOps {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    static void updateTimeLoggedIn(Connection conn, int uid) {
+        String updateQuery = "UPDATE login SET login = ? WHERE uid = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
+            LocalDateTime currentTime = LocalDateTime.now();
+
+            stmt.setTimestamp(1, Timestamp.valueOf(currentTime));  // Set current timestamp
+            stmt.setInt(2, uid);  // Set the user ID
+
+            stmt.executeUpdate();
+            System.out.println("Login time recorded for user ID: " + uid + " at " + currentTime);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     static void createAccount(Connection conn, String username, String password, String firstname, String lastname) {
