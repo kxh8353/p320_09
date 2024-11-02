@@ -13,18 +13,43 @@ public class MovieOps {
 
         //Rating has been checked for correctness, movie exists and user is logged in.
 
+        int movieid = -1;
+
         String search = "SELECT movieid FROM movies WHERE title = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(search)) {
             stmt.setString(1, movie);
             ResultSet resultset = stmt.executeQuery();
 
-            if (resultset.next()) {
-                int movieid = resultset.getInt("movieId");
+            int rowsAffected = 0;
+            while(resultset.next()) {
+                movieid = resultset.getInt("movieid");
+                rowsAffected++;
+            }
+            
+            if(rowsAffected==0){
+                System.out.println("Movie does not exist.");//?SHOULD NOT HAPPEN
+                return;
+            }
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
+        String checkPrev = "SELECT * FROM rates WHERE uid = ? AND movieid = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(checkPrev)) {
+            stmt.setInt(1, uid);
+            stmt.setInt(2, movieid);
+            ResultSet resultset = stmt.executeQuery();
 
-                String insertRating = "INSERT INTO rates (movieid, uid, number_of_stars) VALUES (?, ?)";
+            int rowsAffected = 0;
+            while(resultset.next()) {
+                rowsAffected++;
+            }
+            
+            //Insert NEW rating
+            if(rowsAffected==0){
+                String insertRating = "INSERT INTO rates (movieid, uid, number_of_stars) VALUES (?, ?, ?)";
                 try (PreparedStatement insertStmt = conn.prepareStatement(insertRating)) {
                     insertStmt.setInt(1, movieid);
                     insertStmt.setInt(2, uid);
@@ -32,15 +57,31 @@ public class MovieOps {
                     insertStmt.executeUpdate();
                     System.out.println("Rating added successfully.");
                 }
+                catch(SQLException e){
+                    e.printStackTrace();
+                }
 
-            } else {
-                System.out.println("movie does not exist.");//?SHOULD NOT HAPPEN
-
+            }
+            //UPDATE rating
+            else{
+                String updateRating = "UPDATE rates SET number_of_stars = ? WHERE movieid = ? AND uid = ?";
+                try (PreparedStatement updateStmt = conn.prepareStatement(updateRating)) {
+                    updateStmt.setInt(1, rating);
+                    updateStmt.setInt(2, movieid);
+                    updateStmt.setInt(3, uid);
+                    updateStmt.executeUpdate();
+                    System.out.println("Rating updated successfully.");
+                }
+                catch(SQLException e){
+                    e.printStackTrace();
+                }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+
     }
 
 
