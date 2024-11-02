@@ -207,15 +207,15 @@ public class PlainTextInter {
 
                             // User Ops
                             case "follow":
-                                System.out.println("Enter ID to follow:");
-                                String userIDtoFollow = input.nextLine();
-                                UserOps.followUsers(conn, userIDtoFollow);
+                                System.out.println("Enter Email to Follow");
+                                String emailToFollow = input.nextLine();
+                                UserOps.followUsers(conn, emailToFollow, uidLoggedIn);
                                 break;
                             case "unfollow":
-                                System.out.println("Enter Username or ID to Unfollow:");
+                                System.out.println("Enter Email to Unfollow");
 //                                command = input.nextLine();
                                 String userIDtoUnfollow = input.nextLine();
-                                UserOps.unfollowUsers(conn, userIDtoUnfollow);
+                                UserOps.unfollowUsers(conn, userIDtoUnfollow, uidLoggedIn);
                                 break;
                             case "exit":
                                 quit = true; 

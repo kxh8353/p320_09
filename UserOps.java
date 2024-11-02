@@ -6,40 +6,55 @@ public class UserOps {
 
     // authenticate user with the database
 
-    public static void followUsers(Connection conn, String toBeFollowedUser){
+    public static void followUsers(Connection conn, String toBeFollowedUser, int cUID){
 
         ///first, parse list of usernames and IDs and see if username exists
         //if not, error handling needed
-
-        String query = "SELECT COUNT(*) FROM users WHERE uid = ?";
+        int followeeID = 0;
+        String query = "SELECT e.email, e.uid, u.uid FROM emails AS e LEFT JOIN users AS u ON u.uid = e.uid WHERE email = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)){
-            int idtostring = Integer.parseInt(toBeFollowedUser);
-            stmt.setInt(1, idtostring);
+            stmt.setString(1, toBeFollowedUser);
             try (ResultSet rs = stmt.executeQuery()){
-                if (rs.next() && rs.getInt(1) == 0){
-                    System.out.println("User with ID " + toBeFollowedUser + " does not exist.");
+                if (rs.next() == false){
+                    System.out.println("User with Email " + toBeFollowedUser + " does not exist.");
                     return;
+                }
+                else{
+                    followeeID = rs.getInt("uid");
                 }
             }
         }catch (SQLException e){
             e.printStackTrace();
             return;
         }
-
-        System.out.println("Enter your userID:");
-        Scanner scanner = new Scanner(System.in);
-        String thisuser = scanner.nextLine();
+        String username = "";
+        query = "SELECT username FROM users WHERE uid = ? ";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, cUID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next() == false) {
+                    System.out.println("User with ID " + cUID + " does not exist.");
+                }
+                else{
+                    username = rs.getString("username");
+                }
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            return;
+        }
 
 
         String followQuery = "INSERT INTO follows (Follower, Followee) VALUES (?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(followQuery)) {
-            stmt.setInt(1, Integer.parseInt(thisuser));
-            stmt.setInt(2, Integer.parseInt(toBeFollowedUser));
+            stmt.setInt(1, (cUID));
+            stmt.setInt(2, followeeID);
             int rowsAffected = stmt.executeUpdate();
 
             if (rowsAffected > 0) {
-                System.out.println(thisuser + " is now following " + toBeFollowedUser);
+                System.out.println(username + " is now following " + toBeFollowedUser);
             } else {
                 System.out.println("Follow operation failed. The ID might have not been assigned");
             }
@@ -48,16 +63,19 @@ public class UserOps {
         }
     }
 
-    public static void unfollowUsers(Connection conn, String toBeDisconnecteUser) {
+    public static void unfollowUsers(Connection conn, String toBeDisconnecteUser, int cUID) {
         //similar to follow, first check if username exists. if not, error handle.
-        String query = "SELECT COUNT(*) FROM users WHERE uid = ?";
+        int followeeID = 0;
+        String query = "SELECT e.email, e.uid, u.uid FROM emails AS e LEFT JOIN users AS u ON u.uid = e.uid WHERE email = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)){
-            int idtostring = Integer.parseInt(toBeDisconnecteUser);
-            stmt.setInt(1, idtostring);
+            stmt.setString(1, toBeDisconnecteUser);
             try (ResultSet rs = stmt.executeQuery()){
-                if (rs.next() && rs.getInt(1) == 0){
-                    System.out.println("User with ID " + toBeDisconnecteUser + " does not exist.");
+                if (rs.next() == false){
+                    System.out.println("User with Email " + toBeDisconnecteUser + " does not exist.");
                     return;
+                }
+                else{
+                    followeeID = rs.getInt("uid");
                 }
             }
         }catch (SQLException e){
@@ -65,20 +83,35 @@ public class UserOps {
             return;
         }
 
-        System.out.println("Enter your userID:");
-        Scanner scanner = new Scanner(System.in);
-        String thisuser = scanner.nextLine();
+        String username = "";
+        query = "SELECT username FROM users WHERE uid = ? ";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, cUID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next() == false) {
+                    System.out.println("User with ID " + cUID + " does not exist.");
+                }
+                else{
+                    username = rs.getString("username");
+                }
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            return;
+        }
+
 
 
         String followQuery = "DELETE FROM follows WHERE follower = ? AND followee = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(followQuery)) {
-            stmt.setInt(1, Integer.parseInt(thisuser));
-            stmt.setInt(2, Integer.parseInt(toBeDisconnecteUser));
+            stmt.setInt(1, cUID);
+            stmt.setInt(2, followeeID);
             int rowsAffected = stmt.executeUpdate();
 
             if (rowsAffected > 0) {
-                System.out.println(thisuser + " has unfollowed " + toBeDisconnecteUser);
+                System.out.println(username + " has unfollowed " + toBeDisconnecteUser);
             } else {
                 System.out.println("Follow operation failed. The ID might have not been assigned");
             }
