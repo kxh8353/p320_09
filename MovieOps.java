@@ -783,27 +783,27 @@ public class MovieOps {
         return;
 }
 
-    public static void watch(String movie,Connection conn, int userID) {
+public static void watch(String movie,Connection conn, int userID) {
 
-         String search = "SELECT MovieID FROM movies WHERE movie = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(search)){
-            stmt.setString(1, movie);
-            ResultSet resultset = stmt.executeQuery();
+    String search = "SELECT MovieID FROM movies WHERE title = ?";
+    try (PreparedStatement stmt = conn.prepareStatement(search)){
+        stmt.setString(1, movie);
+        ResultSet resultset = stmt.executeQuery();
 
-            if (resultset.next()){
-                int movieID = resultset.getInt("MovieID");
-                String insertWatched = "INSERT INTO watched_movies (user_id, movie_id) VALUES (?, ?)";
-                    try (PreparedStatement insertStmt = conn.prepareStatement(insertWatched)) {
-                        insertStmt.setInt(1, userID);
-                        insertStmt.setInt(2, movieID);
-                        insertStmt.executeUpdate();
-                        System.out.println("Movie added to watched list.");
+        if (resultset.next()){
+            int movieID = resultset.getInt("MovieID");
+            String insertWatched = "INSERT INTO watched (movieid, uid) VALUES (?, ?)";
+            try (PreparedStatement insertStmt = conn.prepareStatement(insertWatched)) {
+                insertStmt.setInt(1, movieID);
+                insertStmt.setInt(2, userID);
+                insertStmt.executeUpdate();
+                System.out.println("Movie added to watched list.");
             }
 
-                }else{
-                    System.out.println("Movie does not exist.");
+        }else{
+            System.out.println("Movie does not exist.");
 
-                }
+        }
 
         } catch (SQLException e){
             e.printStackTrace();
