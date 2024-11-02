@@ -190,9 +190,7 @@ public class PlainTextInter {
 
                                 }
                                 else if(choice.toLowerCase().equals("collection")){
-                                    System.out.println("Enter name of collection you would like to watch");
-                                    String collectionName = input.nextLine();
-                                    // ADD ANOTHER WATCH FUNCTION!!
+                                    MovieOps.watchCollection(conn, uidLoggedIn);
                                 }
                                 else{
                                     System.out.println("Choice not recognized");
