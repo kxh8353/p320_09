@@ -63,7 +63,7 @@ public class AccountOps {
     }
 
     static void updateTimeLoggedIn(Connection conn, int uid) {
-        String updateQuery = "UPDATE login SET login = ? WHERE uid = ?";
+        String updateQuery = "INSERT INTO login (login, uid ) VALUES (?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
             LocalDateTime currentTime = LocalDateTime.now();
