@@ -12,16 +12,16 @@ public class AccountOps {
 
     static int handlelogin(Connection conn){
         Scanner scanner = new Scanner(System.in);
-        System.out.println("welcome to MovieMatrix, let's help you log in");
+        System.out.println("Welcome to MovieMatrix, let's help you log in");
 
         while (true){
-            System.out.println("\nEnter command in the format: Login <username> <password>");
+            System.out.println("\nEnter user information in the format: <username> <password>");
             String command = scanner.nextLine();
             String[] userIn = command.split(" ");
 
-            if (userIn.length == 3 && userIn[0].equalsIgnoreCase("Login")){
-                String username = userIn[1];
-                String password = userIn[2];
+            if (userIn.length == 2){
+                String username = userIn[0];
+                String password = userIn[1];
 
                 int result = login(conn, username, password);
                 if (result != -1){
@@ -30,7 +30,7 @@ public class AccountOps {
                     System.out.println("Login failed. please try again");
                 }
             }else {
-                System.out.println("Unknown command or incorrect usage. Please use 'Login <username> <password>'");
+                System.out.println("Unknown command or incorrect usage. Please enter in format '<username> <password>'");
                 return -1;
             }
         scanner.close();
@@ -98,7 +98,7 @@ public class AccountOps {
             try (ResultSet rs = checkUsernameStatement.executeQuery()) {
                 if (rs.next()) {
                     usernameCount = rs.getInt(1);
-                    System.out.println("usernamecount: " + usernameCount);
+                    //System.out.println("usernamecount: " + usernameCount);
                     if (usernameCount > 0) {
                         System.out.println("Username already exists.");
                         return; 
@@ -121,7 +121,7 @@ public class AccountOps {
                 incrementID++; // increment to check the next ID
             }
 
-            System.out.println("New ID generated: " + newId);
+            //System.out.println("New ID generated: " + newId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
