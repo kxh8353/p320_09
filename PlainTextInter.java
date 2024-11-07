@@ -73,7 +73,7 @@ public class PlainTextInter {
 
                 while (!quit) {
                     if (!logined) {
-                        System.out.println("Enter command (e.g., Login <username> <password> or Help):");
+                        System.out.println("Enter command (e.g., Login, CreateAccount, or Help):");
                     } else {
                         System.out.println("Enter command (e.g., CreateCollection, SeeCollection, Follow, Unfollow, Logout, Help, etc...):");
                     }
@@ -101,7 +101,7 @@ public class PlainTextInter {
                         System.out.println(" 'Search' ");
                         System.out.println(" 'Rate' 1-5 ");
                         System.out.println(" 'Watch' ");
-                        System.out.println(" 'watchtoptwenty' ");
+                        System.out.println(" 'WatchTopTwenty' ");
 
                         //User ops
                         System.out.println(" 'Follow' ");
@@ -132,18 +132,23 @@ public class PlainTextInter {
                     
                     // Create an account
                     } else if (userIn[0].equalsIgnoreCase("CreateAccount") && !logined) {
-                        System.out.print("\nEnter in the format: CreateAccount <username> <password> <firstname> <lastname>");
+                        System.out.println("\nEnter in the format: <username> <password> <firstname> <lastname>");
                         command = input.nextLine();
                         userIn = command.split(" ");
-                        if (userIn.length == 5) { 
-                            AccountOps.createAccount(conn, userIn[1], userIn[2], userIn[3], userIn[4]);
+                        if (userIn.length == 4) { 
+                            AccountOps.createAccount(conn, userIn[0], userIn[1], userIn[2], userIn[3]);
                         } else {
                             System.out.println("Invalid format. Please try again.");
                         }
 
 
                     // Logged in actions
-                    } else if (logined) {
+                    } else if(userIn[0].equalsIgnoreCase("exit")){
+                        quit = true; 
+                        break;
+                    }
+                    
+                    else if (logined) {
                         switch (userIn[0].toLowerCase()) {
 
                             //Account Ops
