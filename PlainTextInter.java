@@ -211,7 +211,7 @@ public class PlainTextInter {
                                 break;
 
                             case "watchtoptwenty":
-                                AnaylticsOps.Top20in90(conn);
+                                MovieReccomendation.Top20in90(conn);
                                 break;
                             
 
