@@ -101,6 +101,7 @@ public class PlainTextInter {
                         System.out.println(" 'Search' ");
                         System.out.println(" 'Rate' 1-5 ");
                         System.out.println(" 'Watch' ");
+                        System.out.println(" 'watchtoptwenty' ");
 
                         //User ops
                         System.out.println(" 'Follow' ");
@@ -202,6 +203,10 @@ public class PlainTextInter {
                                 else{
                                     System.out.println("Choice not recognized");
                                 }
+                                break;
+
+                            case "watchtoptwenty":
+                                MovieOps.Top20in90(conn);
                                 break;
                             
 
