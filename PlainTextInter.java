@@ -107,6 +107,9 @@ public class PlainTextInter {
                         System.out.println(" 'Follow' ");
                         System.out.println(" 'Unfollow' ");
 
+                        //Anaylitics Ops
+                        System.out.println(" CollectionCount ");
+
                         //Exit app / log out
                         System.out.println(" 'Logout' ");
                         System.out.println(" 'Exit' ");
@@ -214,6 +217,10 @@ public class PlainTextInter {
                                 MovieReccomendation.Top20in90(conn);
                                 break;
                             
+                            //Anaylitics Ops
+                            case "collectioncount":
+                                AnaylticsOps.CollectionCount(conn, uidLoggedIn);
+                                break;
 
                             // User Ops
                             case "follow":
@@ -223,7 +230,6 @@ public class PlainTextInter {
                                 break;
                             case "unfollow":
                                 System.out.println("Enter Email to Unfollow");
-//                                command = input.nextLine();
                                 String userIDtoUnfollow = input.nextLine();
                                 UserOps.unfollowUsers(conn, userIDtoUnfollow, uidLoggedIn);
                                 break;
