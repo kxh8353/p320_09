@@ -1,34 +1,32 @@
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+
+
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class AnaylticsOps {
-
-    public static void Top20in90(Connection conn){
-        String query = "SELECT " +
-                "    m.movieid, " +
-                "    m.title, " +
-                "    COUNT(w.movieid) AS view_count " +
-                "FROM movies AS m " +
-                "JOIN watched AS w ON m.movieid = w.movieid " +
-                "WHERE start_time >= CURRENT_DATE - INTERVAL '90 days' " +
-                "GROUP BY m.movieid, m.title " +
-                "ORDER BY view_count DESC " +
-                "LIMIT 20";
-        try (PreparedStatement stmt = conn.prepareStatement(query)){
+    public static void CollectionCount(Connection conn, int currentUser){
+        String Query = "SELECT COUNT(name) as total FROM collections WHERE uid = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(Query)) {
+            stmt.setInt(1, currentUser);
             ResultSet rs = stmt.executeQuery();
-            System.out.println("Top 20 most popular movies in the last 90 days:");
-            while (rs.next()){
-                String title = rs.getString("title");
-                int viewCount = rs.getInt("view_count");
-                System.out.println("Title: " + title + ", Views: " + viewCount);
+            while(rs.next()){
+                int count = rs.getInt("total");
+                System.out.println("Number of Collections: " + count);
             }
-
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
-
+    public static void FollowersCount(Connection conn, int currentUser){
+        //TODO
+    }
+    public static void FollowingCount(Connection conn, int currentUser){
+        //TODO
+    }
+    public static void Top10Movies(Connection conn, int currentUser){
+        //TODO
+    }
 }
