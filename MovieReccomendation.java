@@ -33,6 +33,44 @@ public class MovieReccomendation {
     }
 
 
+    public static void Top20moviesAmongFollowers(Connection conn, int uid){
+
+        String query = "SELECT  " +
+        "    m.movieid, " +
+        "    m.title, " +
+        "    COUNT(w.movieid) AS view_count " +
+        "FROM movies AS m " +
+        "JOIN watched AS w ON m.movieid = w.movieid " +
+        "JOIN follows AS f ON w.uid = f.followee " +
+        "WHERE f.follower = ? " +
+        "GROUP BY m.movieid, m.title " +
+        "ORDER BY view_count DESC "  +
+        "LIMIT 20";
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setInt(1, uid);
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Top 20 most popular movies among the followers:");
+
+            System.out.println("Executing query for user with UID: " + uid);
+
+            if (!rs.isBeforeFirst()) {  
+                System.out.println("No movies found for the followers.");
+            }
+
+            while (rs.next()){
+                String title = rs.getString("title");
+                int viewCount = rs.getInt("view_count");
+                System.out.println("Title: " + title + ", Views: " + viewCount);
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+        
+
+
     public static void top5ThisMonth(int uid, Connection conn) {
 
         LocalDateTime currentTime = LocalDateTime.now();

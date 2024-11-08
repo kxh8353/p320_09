@@ -212,9 +212,13 @@ public class PlainTextInter {
                                     System.out.println("Choice not recognized");
                                 }
                                 break;
-
+                            
+                            // MovieRecommendation ops
                             case "watchtoptwenty":
                                 MovieReccomendation.Top20in90(conn);
+                                break;
+                            case "toptwentyamongfollowers":
+                                MovieReccomendation.Top20moviesAmongFollowers(conn, uidLoggedIn);
                                 break;
                             
                             //Anaylitics Ops
