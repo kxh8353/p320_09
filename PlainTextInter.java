@@ -101,7 +101,8 @@ public class PlainTextInter {
                         System.out.println(" 'Search' ");
                         System.out.println(" 'Rate' 1-5 ");
                         System.out.println(" 'Watch' ");
-                        System.out.println(" 'WatchTopTwenty' ");
+                        System.out.println(" 'watchtoptwenty' ");
+                        System.out.println(" 'toptwentyamongfollowers' ");
 
                         //User ops
                         System.out.println(" 'Follow' ");
