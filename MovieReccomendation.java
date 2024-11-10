@@ -75,29 +75,14 @@ public class MovieReccomendation {
     public static void RecommendedMoviesForYou(Connection conn, int uid){
         String query =
                 "SELECT m.movieid, m.title, AVG(r.number_of_stars) AS avg_rating " +
-                "FROM movies AS m " +
-                "JOIN genre AS g ON m.movieid = g.genreid " +
-                "JOIN casts AS c ON m.movieid = c.movieid " +
-                "JOIN rates AS r ON m.movieid = r.movieid " +
-                "WHERE g.genreid IN ( " +
-                    "SELECT g2.genreid FROM genre AS g2 " +
-                    "JOIN movies AS m2 ON g2.genreid = m2.movieid " +
-                    "JOIN rates AS r2 ON m2.movieid = r2.movieid " +
-                    "WHERE r2.uid = ? " +
-                ") " +
-                "AND c.contributorid IN ( " +
-                    "SELECT c2.contributorid FROM casts AS c2 " +
-                    "JOIN movies AS m2 ON c2.movieid = m2.movieid " +
-                    "JOIN rates AS r2 ON m2.movieid = r2.movieid " +
-                    "WHERE r2.uid = ? " +
-                ") " +
-                "GROUP BY m.movieid, m.title " +
-                "ORDER BY avg_rating DESC " +
-                "LIMIT 10";
+                        "FROM movies AS m " +
+                        "JOIN rates AS r ON m.movieid = r.movieid " +
+                        "GROUP BY m.movieid, m.title " +
+                        "ORDER BY avg_rating DESC " +
+                        "LIMIT 10";
 
         try (PreparedStatement stmt = conn.prepareStatement(query)){
-            stmt.setInt(1, uid);
-            stmt.setInt(2, uid);
+            // stmt.setInt(1, uid);
 
             ResultSet rs = stmt.executeQuery();
 
