@@ -1,6 +1,9 @@
 import java.util.Scanner;
 import com.jcraft.jsch.*;
 
+import movies.PostgresSSH.lib.jsch-0.1.55.src.main.java.com.jcraft.jsch.JSch;
+import movies.PostgresSSH.lib.jsch-0.1.55.src.main.java.com.jcraft.jsch.Session;
+
 // import movies.PostgresSSH.lib.jsch-0.1.55.src.main.java.com.jcraft.jsch.JSch;
 // import movies.PostgresSSH.lib.jsch-0.1.55.src.main.java.com.jcraft.jsch.Session;
 
@@ -221,6 +224,9 @@ public class PlainTextInter {
                             case "toptwentyamongfollowers":
                                 MovieReccomendation.Top20moviesAmongFollowers(conn, uidLoggedIn);
                                 break;
+                            case "movierecommendationsforme":
+                                MovieReccomendation.RecommendedMoviesForYou(conn, uidLoggedIn);
+                                break;    
                             
                             //Anaylitics Ops
                             case "collectioncount":
