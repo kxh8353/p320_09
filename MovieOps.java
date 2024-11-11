@@ -36,7 +36,7 @@ public class MovieOps {
             e.printStackTrace();
         }
 
-        String checkPrev = "SELECT * FROM rates WHERE uid = ? AND movieid = ?";
+        String checkPrev = "SELECT uid, movieid FROM rates WHERE uid = ? AND movieid = ?";
         try (PreparedStatement stmt = conn.prepareStatement(checkPrev)) {
             stmt.setInt(1, uid);
             stmt.setInt(2, movieid);
@@ -797,7 +797,7 @@ public class MovieOps {
 
 public static void watch(String movie,Connection conn, int userID) {
 
-    String search = "SELECT * FROM movies WHERE title = ?";
+    String search = "SELECT movieid, title FROM movies WHERE title = ?";
     int movieid = -1;
     String movieTitle = "";
     try (PreparedStatement stmt = conn.prepareStatement(search)){
@@ -888,7 +888,7 @@ public static void watch(String movie,Connection conn, int userID) {
 
 
         //Get collection id and confirm collection exists
-        String query1 = "SELECT * FROM collections WHERE uid = ? AND name = ?";
+        String query1 = "collectionid FROM collections WHERE uid = ? AND name = ?";
 
         try (PreparedStatement viewStatement = conn.prepareStatement(query1)){
             viewStatement.setInt(1, uid);

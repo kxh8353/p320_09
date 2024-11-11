@@ -50,7 +50,7 @@ public class CollectionOps {
 
         // Check if collection name duplicate
         //Get collection id
-        String queryCheck = "SELECT * FROM collections WHERE name = ?";
+        String queryCheck = "SELECT name FROM collections WHERE name = ?";
 
         try (PreparedStatement checkStatement = conn.prepareStatement(queryCheck)){
             checkStatement.setString(1, name);
@@ -98,7 +98,7 @@ public class CollectionOps {
 
     // Tested
     public static void SeeCollectionAll(int uid, Connection conn){
-        String query = "SELECT * FROM collections WHERE uid = ? ORDER BY name";
+        String query = "SELECT name, collectionid FROM collections WHERE uid = ? ORDER BY name";
 
         try (PreparedStatement viewStatement = conn.prepareStatement(query)){
             viewStatement.setInt(1, uid);
@@ -201,7 +201,7 @@ public class CollectionOps {
 
 
         //Get collection id
-        String query = "SELECT * FROM collections WHERE uid = ? AND name = ?";
+        String query = "SELECT collectionid FROM collections WHERE uid = ? AND name = ?";
 
         try (PreparedStatement viewStatement = conn.prepareStatement(query)){
             viewStatement.setInt(1, uid);
@@ -253,7 +253,7 @@ public class CollectionOps {
 
 
         // Check movie is not already in collection
-        String query4 = "SELECT * FROM contains WHERE collectionid = ? and movieid = ?";
+        String query4 = "SELECT name FROM contains WHERE collectionid = ? and movieid = ?";
 
         try (PreparedStatement viewStatement = conn.prepareStatement(query4)){
             viewStatement.setInt(1, collectionID);
@@ -315,7 +315,7 @@ public class CollectionOps {
 
 
         //Get collection id
-        String query = "SELECT * FROM collections WHERE uid = ? AND name = ?";
+        String query = "SELECT collectionid FROM collections WHERE uid = ? AND name = ?";
 
         try (PreparedStatement viewStatement = conn.prepareStatement(query)){
             viewStatement.setInt(1, uid);
@@ -367,7 +367,7 @@ public class CollectionOps {
 
 
         //Check if movie is in collection
-        String query4 = "SELECT * FROM contains WHERE movieid = ? AND collectionid = ?";
+        String query4 = "SELECT name FROM contains WHERE movieid = ? AND collectionid = ?";
 
         try (PreparedStatement viewStatement = conn.prepareStatement(query4)){
             viewStatement.setInt(1, movieID);
@@ -495,7 +495,7 @@ public class CollectionOps {
         String collectionNameNew = input.nextLine();
 
 
-        String query1 = "SELECT * FROM collections WHERE name = ? AND uid = ?";
+        String query1 = "SELECT name FROM collections WHERE name = ? AND uid = ?";
         try (PreparedStatement viewStatement = conn.prepareStatement(query1)){
             viewStatement.setString(1, collectionNameNew);
             viewStatement.setInt(2, uid);

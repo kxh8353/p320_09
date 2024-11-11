@@ -158,7 +158,7 @@ public class AccountOps {
         String email = scanner.nextLine();
 
         
-        String query = "SELECT * FROM emails WHERE email = ? AND uid = ?";
+        String query = "SELECT email FROM emails WHERE email = ? AND uid = ?";
 
         try (PreparedStatement viewStatement = conn.prepareStatement(query)){
             viewStatement.setString(1, email);

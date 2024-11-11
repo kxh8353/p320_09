@@ -98,10 +98,50 @@ public class MovieReccomendation {
         }
     }
 
-    public static void top5ThisMonth(int uid, Connection conn) {
+    public static void top5ThisMonth(Connection conn) {
 
-        LocalDateTime currentTime = LocalDateTime.now();
-        
+        String top5Query = "Select m.title, m.mpaa, COUNT(w.movieid) AS watch_count\n" + //
+                        "from movies as m\n" + //
+                        "LEFT JOIN watched as w on m.movieid = w.movieid\n" + //
+                        "LEFT JOIN released_on as r on m.movieid = r.movieid\n" + //
+                        "\n" + //
+                        "\n" + //
+                        "WHERE EXTRACT(MONTH FROM r.date) = EXTRACT(MONTH FROM CURRENT_DATE)\n" + //
+                        " AND\n" + //
+                        "     EXTRACT(YEAR FROM r.date) = EXTRACT(YEAR FROM CURRENT_DATE)\n" + //
+                        "   AND\n" + //
+                        "     EXTRACT(MONTH FROM w.start_time) = EXTRACT(MONTH FROM CURRENT_DATE)\n" + //
+                        " AND\n" + //
+                        "     EXTRACT(YEAR FROM w.start_time) = EXTRACT(YEAR FROM CURRENT_DATE)\n" + //
+                        "\n" + //
+                        "\n" + //
+                        "GROUP BY m.title, m.mpaa, m.movieid\n" + //
+                        "ORDER BY watch_count DESC\n" + //
+                        "LIMIT 5;";
+
+        try (PreparedStatement topFivestatement = conn.prepareStatement(top5Query)){
+
+            ResultSet rset = topFivestatement.executeQuery();
+            int rows = 0;
+
+            while(rset.next()) {   // Move the cursor to the next row
+                String movieTitle = rset.getString("title");
+                String rating = rset.getString("mpaa");
+                if(rows==0){
+                    System.out.println("Top Releases This Month!");
+                }
+                System.out.println((rows+1) + ". " + movieTitle + ", " + rating.toUpperCase());
+                rows++;
+            }
+
+            if(rows == 0){
+                System.out.println("No movies have both been released this month and recently watched");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
 
     }
     

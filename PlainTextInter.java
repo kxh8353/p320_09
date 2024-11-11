@@ -1,8 +1,8 @@
 import java.util.Scanner;
 import com.jcraft.jsch.*;
 
-import movies.PostgresSSH.lib.jsch-0.1.55.src.main.java.com.jcraft.jsch.JSch;
-import movies.PostgresSSH.lib.jsch-0.1.55.src.main.java.com.jcraft.jsch.Session;
+// import movies.PostgresSSH.lib.jsch-0.1.55.src.main.java.com.jcraft.jsch.JSch;
+// import movies.PostgresSSH.lib.jsch-0.1.55.src.main.java.com.jcraft.jsch.Session;
 
 // import movies.PostgresSSH.lib.jsch-0.1.55.src.main.java.com.jcraft.jsch.JSch;
 // import movies.PostgresSSH.lib.jsch-0.1.55.src.main.java.com.jcraft.jsch.Session;
@@ -104,15 +104,19 @@ public class PlainTextInter {
                         System.out.println(" 'Search' ");
                         System.out.println(" 'Rate' 1-5 ");
                         System.out.println(" 'Watch' ");
-                        System.out.println(" 'watchtoptwenty' ");
-                        System.out.println(" 'toptwentyamongfollowers' ");
+
+                        //Movie Reccomendation Ops
+                        System.out.println(" 'Top20Last90Days' ");
+                        System.out.println(" 'TopTwentyAmongFollowers' ");
+                        System.out.println(" 'MovieRecommendationsForMe' ");
+                        System.out.println(" 'Top5NewReleases' ");
 
                         //User ops
                         System.out.println(" 'Follow' ");
                         System.out.println(" 'Unfollow' ");
 
-                        //Anaylitics Ops
-                        System.out.println(" CollectionCount ");
+                        //Analytics Ops
+                        System.out.println(" 'DisplayUserProfile' ");
 
                         //Exit app / log out
                         System.out.println(" 'Logout' ");
@@ -218,7 +222,7 @@ public class PlainTextInter {
                                 break;
                             
                             // MovieRecommendation ops
-                            case "watchtoptwenty":
+                            case "top20last90days":
                                 MovieReccomendation.Top20in90(conn);
                                 break;
                             case "toptwentyamongfollowers":
@@ -227,10 +231,13 @@ public class PlainTextInter {
                             case "movierecommendationsforme":
                                 MovieReccomendation.RecommendedMoviesForYou(conn, uidLoggedIn);
                                 break;    
+                            case "top5newreleases":
+                                MovieReccomendation.top5ThisMonth(conn);
+                                break;
                             
-                            //Anaylitics Ops
-                            case "collectioncount":
-                                AnaylticsOps.CollectionCount(conn, uidLoggedIn);
+                            //Analytics Ops
+                            case "displayuserprofile":
+                                AnaylticsOps.displayProfile(conn, rport);
                                 break;
 
                             // User Ops
