@@ -72,25 +72,60 @@ public class MovieReccomendation {
 
     // For you: Recommend movies to watch to based on your play history
     // (e.g. genre, cast member, rating) and the play history of similar users
-    public static void RecommendedMoviesForYou(Connection conn, int uid){
+    public static void RecommendedMoviesForYou(Connection conn, int uid) {
         String query =
-                "SELECT m.movieid, m.title, AVG(r.number_of_stars) AS avg_rating " +
-                        "FROM movies AS m " +
-                        "JOIN rates AS r ON m.movieid = r.movieid " +
+                "WITH TopGenres AS ( " +
+                        "    SELECT g.genreid " +
+                        "    FROM watched w " +
+                        "    JOIN genre g ON w.movieid = g.genreid " +
+                        "    WHERE w.uid = ? " +
+                        "    GROUP BY g.genreid " +
+                        "    ORDER BY COUNT(*) DESC " +
+                        "    LIMIT 5 " +
+                        "), " +
+                        "TopActors AS ( " +
+                        "    SELECT c.contributorid " +
+                        "    FROM watched w " +
+                        "    JOIN casts c ON w.movieid = c.movieid " +
+                        "    JOIN genre g ON w.movieid = g.genreid " +
+                        "    WHERE w.uid = ? AND g.genreid IN (SELECT genreid FROM TopGenres) " +
+                        "    GROUP BY c.contributorid " +
+                        "    ORDER BY COUNT(*) DESC " +
+                        "    LIMIT 5 " +
+                        "), " +
+                        "TopRatedMovies AS ( " +
+                        "    SELECT m.movieid, m.title, AVG(r.number_of_stars) AS avg_rating " +
+                        "    FROM watched w " +
+                        "    JOIN movies m ON w.movieid = m.movieid " +
+                        "    JOIN rates r ON m.movieid = r.movieid " +
+                        "    WHERE w.uid = ? " +
+                        "    GROUP BY m.movieid, m.title " +
+                        "    ORDER BY avg_rating DESC " +
+                        "    LIMIT 5 " +
+                        ") " +
+                        "SELECT m.movieid, m.title, AVG(r.number_of_stars) AS avg_rating " +
+                        "FROM movies m " +
+                        "JOIN genre g ON m.movieid = g.genreid " +
+                        "JOIN casts c ON m.movieid = c.movieid " +
+                        "JOIN rates r ON m.movieid = r.movieid " +
+                        "WHERE g.genreid IN (SELECT genreid FROM TopGenres) " +
+                        "   OR c.contributorid IN (SELECT contributorid FROM TopActors) " +
                         "GROUP BY m.movieid, m.title " +
                         "ORDER BY avg_rating DESC " +
                         "LIMIT 10";
 
+
         try (PreparedStatement stmt = conn.prepareStatement(query)){
-            // stmt.setInt(1, uid);
+            stmt.setInt(1, uid);
+            stmt.setInt(2, uid);
+            stmt.setInt(3, uid);
 
             ResultSet rs = stmt.executeQuery();
-
-            System.out.println("Top 10 Movies Recommended For You: ");
-            while (rs.next()){
+            System.out.println("Top 3 Movies Recommended For You: ");
+            while (rs.next()) {
                 String title = rs.getString("title");
                 double avgRating = rs.getDouble("avg_rating");
-                System.out.println("Title: " + title + ", Average Rating: " + avgRating);
+                System.out.println("Title: " + title + ", Average rating: " + avgRating);
             }
 
         }catch (SQLException e){
