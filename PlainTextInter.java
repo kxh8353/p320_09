@@ -115,7 +115,7 @@ public class PlainTextInter {
                         System.out.println(" 'Follow' ");
                         System.out.println(" 'Unfollow' ");
 
-                        //Analytics Ops
+                        //User Profile Ops
                         System.out.println(" 'DisplayUserProfile' ");
 
                         //Exit app / log out
@@ -235,9 +235,9 @@ public class PlainTextInter {
                                 MovieReccomendation.top5ThisMonth(conn);
                                 break;
                             
-                            //Analytics Ops
+                            // User Profile Ops
                             case "displayuserprofile":
-                                AnaylticsOps.displayProfile(conn, rport);
+                                UserProfileOps.displayProfile(conn, uidLoggedIn);
                                 break;
 
                             // User Ops
