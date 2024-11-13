@@ -20,8 +20,8 @@ public class UserProfileOps {
         System.out.println();
         FollowingCount(conn, currentUser);
 
-        System.out.println("\nWould you like to see your top 10 movies based on watch history or ratings?" + 
-        " Enter 'W' for watch history and 'R' for ratings.");
+        System.out.println("\nWould you like to see your top 10 movies based on watch history, ratings, or both?" + 
+        " Enter 'W' for watch history, 'R' for ratings, or 'WR' for both.");
         String command = input.nextLine();
 
         System.out.println();
@@ -31,11 +31,15 @@ public class UserProfileOps {
         else if(command.equalsIgnoreCase("w")){
             Top10MoviesWatches(conn, currentUser);
         }
+        else if(command.equalsIgnoreCase("wr")){
+            Top10MoviesWatchesRatings(conn, currentUser);
+        }
         else{
             System.out.println("Command not recognized.");
         }
 
-        
+        System.out.println();
+
     }
 
     public static void UserInfo(Connection conn, int currentUser){
@@ -160,6 +164,38 @@ public class UserProfileOps {
             }
             if(count ==0){
                 System.out.println("User has not watched any movies");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void Top10MoviesWatchesRatings(Connection conn, int currentUser){
+        //KC - Check for correctness 
+        String Query = "SELECT m.movieid, m.title, m.mpaa, COUNT(w.movieid) AS watch_count, AVG(r.number_of_stars) AS rating FROM movies AS m\n" + //
+                        "LEFT JOIN watched AS w ON m.movieid = w.movieid\n" + //
+                        "LEFT JOIN rates AS r on m.movieid = r.movieid\n" + //
+                        "WHERE w.uid = ?\n" + //
+                        "GROUP BY m.title, m.mpaa, m.movieid\n" + //
+                        "HAVING COUNT(w.movieid) > 0 OR COUNT(r.number_of_stars) > 0\n" + //
+                        "ORDER BY watch_count DESC, rating DESC\n" + //
+                        "LIMIT 10";
+        try (PreparedStatement stmt = conn.prepareStatement(Query)) {
+            stmt.setInt(1, currentUser);
+            ResultSet rs = stmt.executeQuery();
+            int count = 0;
+            while(rs.next()){
+                if(count == 0){
+                    System.out.println("Your Top 10 Movies Based on Watch History and Ratings!");
+                }
+                String title = rs.getString("title");
+                String rating = rs.getString("mpaa");
+                count++;
+                System.out.println(count + ". " + title + ", " + rating.toUpperCase());
+            }
+            if(count ==0){
+                System.out.println("User has not watched or rated any movies");
             }
         } catch (SQLException e) {
             e.printStackTrace();
