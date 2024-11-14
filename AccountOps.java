@@ -75,7 +75,10 @@ public class AccountOps {
 
 
                 String storedPassword = resultset.getString("password");
-                storedPassword = decrypt(storedPassword,secretKey);
+                if(isEncrypted(storedPassword,secretKey)){
+                    storedPassword = decrypt(storedPassword,secretKey);
+                }
+
                 int uid = resultset.getInt("uid");
                 if (storedPassword.equals(password)){
                     System.out.println("Login successful for user: " + username);
@@ -110,7 +113,15 @@ public class AccountOps {
             e.printStackTrace();
         }
     }
-
+    public static boolean isEncrypted(String password, SecretKey key) {
+        try {
+            // Attempt decryption (assume decrypt is implemented)
+            decrypt(password, key);
+            return true; // If decryption succeeds, it's encrypted data
+        } catch (Exception e) {
+            return false; // Decryption failed, likely not encrypted
+        }
+    }
      static void createAccount(Connection conn, String username, String password, String firstname, String lastname) throws Exception {
         username = username.trim();
         int usernameCount = 0;
