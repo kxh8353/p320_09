@@ -1,16 +1,40 @@
 import javax.xml.transform.Result;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Random;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import java.security.SecureRandom;
+import java.util.Base64;
 
-
+import java.util.Base64;
 
 public class AccountOps {
+    static Cipher cipher;
+    static {
+        try {
+            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding"); // Specify the transformation
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error initializing cipher");
+        }
+    }
+    static byte[] keyBytes = "1234567890123456".getBytes(); // Ensure it matches the key size requirements
+    static SecretKey secretKey = new SecretKeySpec(keyBytes, "AES");
 
-    static int handlelogin(Connection conn){
+    public SecretKey returnEncrypt(){
+        return secretKey;
+    }
+
+    static int handlelogin(Connection conn) throws Exception {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to MovieMatrix, let's help you log in");
 
@@ -23,6 +47,9 @@ public class AccountOps {
                 String username = userIn[0];
                 String password = userIn[1];
 
+
+
+               /// int result = login(conn, username, encrypt(password,secretKey));
                 int result = login(conn, username, password);
                 if (result != -1){
                     return result;
@@ -45,7 +72,10 @@ public class AccountOps {
             ResultSet resultset = stmt.executeQuery();
 
             if (resultset.next()){
+
+
                 String storedPassword = resultset.getString("password");
+                storedPassword = decrypt(storedPassword,secretKey);
                 int uid = resultset.getInt("uid");
                 if (storedPassword.equals(password)){
                     System.out.println("Login successful for user: " + username);
@@ -59,6 +89,8 @@ public class AccountOps {
             }
         } catch (SQLException e){
             e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         return -1;
     }
@@ -79,7 +111,7 @@ public class AccountOps {
         }
     }
 
-    static void createAccount(Connection conn, String username, String password, String firstname, String lastname) {
+     static void createAccount(Connection conn, String username, String password, String firstname, String lastname) throws Exception {
         username = username.trim();
         int usernameCount = 0;
 
@@ -129,6 +161,14 @@ public class AccountOps {
 
         LocalDateTime currentTime = LocalDateTime.now();
 
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+        keyGenerator.init(128); // block size is 128bits
+
+            ///cipher = Cipher.getInstance("AES");
+
+            password = encrypt(password,secretKey);
+
+
         String insertQuery = "INSERT INTO users (username, password, firstname, lastname, date_made, uid) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement insertStatement = conn.prepareStatement(insertQuery)) {
@@ -150,6 +190,7 @@ public class AccountOps {
             e.printStackTrace();
         }
     }
+
 
     public static void addUserEmail(int uid, Connection conn){
         
@@ -200,5 +241,45 @@ public class AccountOps {
 
     }
 
+    public static String encrypt(String password, SecretKey key) throws Exception {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] iv = new byte[16];
+        secureRandom.nextBytes(iv);
+        IvParameterSpec ivSpec = new IvParameterSpec(iv);
 
+        cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
+
+        byte[] plainTextByte = password.getBytes();
+        byte[] encryptedByte = cipher.doFinal(plainTextByte);
+
+        // Combine IV and encrypted text
+        byte[] combined = new byte[iv.length + encryptedByte.length];
+        System.arraycopy(iv, 0, combined, 0, iv.length);
+        System.arraycopy(encryptedByte, 0, combined, iv.length, encryptedByte.length);
+
+        return Base64.getEncoder().encodeToString(combined);
+    }
+
+    public static String decrypt(String password, SecretKey key) throws Exception{
+        ///password = encrypt(password,key);
+        byte[] combined = Base64.getDecoder().decode(password);
+
+        // Extract IV (first 16 bytes)
+        byte[] iv = new byte[16];
+        System.arraycopy(combined, 0, iv, 0, iv.length);
+
+        // Extract the actual encrypted data (remaining bytes)
+        byte[] encryptedTextByte = new byte[combined.length - iv.length];
+        System.arraycopy(combined, iv.length, encryptedTextByte, 0, encryptedTextByte.length);
+
+        // Initialize the cipher in DECRYPT_MODE with the extracted IV
+        IvParameterSpec ivSpec = new IvParameterSpec(iv);
+        cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
+
+        // Decrypt the data
+        byte[] decryptedByte = cipher.doFinal(encryptedTextByte);
+
+        // Return the decrypted data as a string
+        return new String(decryptedByte);
+    }
 }
