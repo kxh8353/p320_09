@@ -93,7 +93,8 @@ public class AccountOps {
         } catch (SQLException e){
             e.printStackTrace();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);
+            e.printStackTrace();
         }
         return -1;
     }
