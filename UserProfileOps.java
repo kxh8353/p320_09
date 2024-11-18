@@ -72,7 +72,6 @@ public class UserProfileOps {
     }
 
     public static void FollowersCount(Connection conn, int currentUser){
-        //KC - Check for correctness 
         String Query = "SELECT COUNT(f.followee) AS follower_count\n" + //
                         "FROM users AS u\n" + //
                         "LEFT JOIN follows AS f ON u.uid = f.followee\n" + //
@@ -92,7 +91,6 @@ public class UserProfileOps {
     }
 
     public static void FollowingCount(Connection conn, int currentUser){
-        //KC - Check for correctness 
         String Query = "SELECT COUNT(f.follower) AS following_count\n" + //
                         "FROM users AS u\n" + //
                         "LEFT JOIN follows AS f ON u.uid = f.follower\n" + //
@@ -111,7 +109,7 @@ public class UserProfileOps {
     }
 
     public static void Top10MoviesRating(Connection conn, int currentUser){
-        //KC - Check for correctness 
+
         String Query = "SELECT m.title, m.mpaa, AVG(r.number_of_stars) AS rating FROM movies AS m\n" + //
                         "LEFT JOIN rates AS r ON r.movieid = m.movieid\n" + //
                         "WHERE r.uid = ?\n" + //
@@ -143,7 +141,6 @@ public class UserProfileOps {
     }
 
     public static void Top10MoviesWatches(Connection conn, int currentUser){
-        //KC - Check for correctness 
         String Query = "SELECT m.title, m.mpaa, COUNT(w.movieid) AS watch_count FROM movies AS m\n" + //
                         "LEFT JOIN watched AS w ON m.movieid = w.movieid\n" + //
                         "WHERE w.uid = ?\n" + //
@@ -173,7 +170,6 @@ public class UserProfileOps {
     }
 
     public static void Top10MoviesWatchesRatings(Connection conn, int currentUser){
-        //KC - Check for correctness 
         String Query = "SELECT m.movieid, m.title, m.mpaa, COUNT(w.movieid) AS watch_count, AVG(r.number_of_stars) AS rating FROM movies AS m\n" + //
                         "LEFT JOIN watched AS w ON m.movieid = w.movieid\n" + //
                         "LEFT JOIN rates AS r on m.movieid = r.movieid\n" + //
