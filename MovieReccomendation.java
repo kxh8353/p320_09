@@ -148,6 +148,7 @@ public class MovieReccomendation {
         try (PreparedStatement stmt = conn.prepareStatement(query)){
             stmt.setInt(1, uid);
             stmt.setInt(2, uid);
+            stmt.setInt(3, uid);
 
             ResultSet rs = stmt.executeQuery();
             System.out.println("Top 10 Movies Recommended For You: ");

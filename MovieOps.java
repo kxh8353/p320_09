@@ -888,7 +888,7 @@ public static void watch(String movie,Connection conn, int userID) {
 
 
         //Get collection id and confirm collection exists
-        String query1 = "collectionid FROM collections WHERE uid = ? AND name = ?";
+        String query1 = "SELECT collectionid FROM collections WHERE uid = ? AND name = ?";
 
         try (PreparedStatement viewStatement = conn.prepareStatement(query1)){
             viewStatement.setInt(1, uid);

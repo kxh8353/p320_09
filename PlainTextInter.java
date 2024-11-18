@@ -81,6 +81,7 @@ public class PlainTextInter {
                         System.out.println("Enter command (e.g., CreateCollection, SeeCollection, Follow, Unfollow, Logout, Help, etc...):");
                     }
 
+                    
                     String command = input.nextLine();
                     userIn = command.split(" ");
 
@@ -130,6 +131,7 @@ public class PlainTextInter {
                             logined = true; // login successful
                             uidLoggedIn = result;
                             System.out.println("Logged in");
+                            // System.out.println("TESTING REMOVE user id " + uidLoggedIn);
                         } else {
                             System.out.println("Login failed. Please try again.");
                         }

@@ -108,7 +108,7 @@ public class AccountOps {
             stmt.setInt(2, uid);  
 
             stmt.executeUpdate();
-            System.out.println("Login time recorded for user ID: " + uid + " at " + currentTime);
+            // System.out.println("Login time recorded for user ID: " + uid + " at " + currentTime);
         } catch (SQLException e) {
             e.printStackTrace();
         }
