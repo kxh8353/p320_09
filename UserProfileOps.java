@@ -117,6 +117,7 @@ public class UserProfileOps {
                         "WHERE r.uid = ?\n" + //
                         "GROUP BY m.movieid, m.title\n" + //
                         "HAVING COUNT(r.number_of_stars) > 0\n" + //
+                        "ORDER BY rating DESC\n" + //
                         "LIMIT 10;";
         try (PreparedStatement stmt = conn.prepareStatement(Query)) {
             stmt.setInt(1, currentUser);
