@@ -127,9 +127,7 @@ public class MovieReccomendation {
         "GROUP BY m.movieid, m.title " + 
         "ORDER BY avg_rating DESC " + 
         "LIMIT 10 ";
-
-                
-
+        
 
         try (PreparedStatement stmt = conn.prepareStatement(query)){
             stmt.setInt(1, uid);
