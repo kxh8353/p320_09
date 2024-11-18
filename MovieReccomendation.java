@@ -141,6 +141,7 @@ public class MovieReccomendation {
             "GROUP BY w2.uid " + 
         ") " + 
         "GROUP BY m.movieid, m.title " +
+        "HAVING AVG(r.number_of_stars) IS NOT NULL " +
         "ORDER BY avg_rating DESC " + 
         "LIMIT 10 ";
         
