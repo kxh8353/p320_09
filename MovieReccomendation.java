@@ -125,6 +125,22 @@ public class MovieReccomendation {
             "LIMIT 10 " +
         ") " +
         "GROUP BY m.movieid, m.title " + 
+        "UNION " + 
+        "SELECT " +
+        "   m.movieid, " +
+        "   m.title, " +
+        "   AVG(r.number_of_stars) AS avg_rating " + 
+        "FROM movies m " + 
+        "JOIN watched w ON m.movieid = w.movieid" + 
+        "LEFT JOIN rates r ON m.movieid = r.movieid" + 
+        "WHERE w.uid in ( " + 
+            "SELECT w2.uid " + 
+            "FROM watched w " + 
+            "JOIN watched w2 ON w.movieid = w2.movieid " + 
+            "WHERE w.uid = ? " + 
+            "GROUP BY w2.uid " + 
+        ") " + 
+        "GROUP BY m.movieid, m.title " +
         "ORDER BY avg_rating DESC " + 
         "LIMIT 10 ";
         
