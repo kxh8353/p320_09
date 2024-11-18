@@ -80,7 +80,7 @@ public class MovieReccomendation {
                 "FROM movies m " +
                 "LEFT JOIN has_genre hg ON m.movieid = hg.movieid " +
                 "LEFT JOIN genre g ON hg.genreid = g.genreid " +
-                "LEFT JOIN rates r ON m.movieid = r.movieid " +
+                "INNER JOIN rates r ON m.movieid = r.movieid " + 
                 "WHERE hg.genreid IN ( " +
                 "    SELECT g.genreid " +
                 "    FROM watched w " +
@@ -90,14 +90,15 @@ public class MovieReccomendation {
                 "    GROUP BY g.genreid " +
                 ") " +
                 "GROUP BY m.movieid, m.title " +
+                "HAVING AVG(r.number_of_stars) IS NOT NULL " +  
                 "UNION " +
                 "SELECT " +
-                "   m.movieid, " +  
-                "   m.title, " +    
+                "   m.movieid, " +
+                "   m.title, " +
                 "   AVG(r.number_of_stars) AS avg_rating " +
                 "FROM movies m " +
                 "LEFT JOIN casts AS cs ON m.movieid = cs.movieid " +
-                "LEFT JOIN rates AS r ON m.movieid = r.movieid " +
+                "INNER JOIN rates AS r ON m.movieid = r.movieid " +  
                 "WHERE cs.contributorid IN ( "  +
                 "    SELECT c.contributorid " +
                 "    FROM watched w " +
@@ -107,24 +108,26 @@ public class MovieReccomendation {
                 "    GROUP BY c.contributorid " +
                 ") " +
                 "GROUP BY m.movieid, m.title " +
+                "HAVING AVG(r.number_of_stars) IS NOT NULL " +  
                 "UNION " +
                 "SELECT "  +
                 "   m.movieid, " +
                 "   m.title, " +
                 "   AVG(r.number_of_stars) AS avg_rating "  +
                 "FROM movies m " +
-                "LEFT JOIN rates AS r ON m.movieid = r.movieid " +
+                "INNER JOIN rates AS r ON m.movieid = r.movieid " +  
                 "WHERE m.movieid IN ( " +
                 "    SELECT m.movieid " +
                 "    FROM watched w " +
                 "    JOIN movies m ON w.movieid = m.movieid " +
-                "    LEFT JOIN rates r ON m.movieid = r.movieid " +
+                "    INNER JOIN rates r ON m.movieid = r.movieid " +  
                 "    WHERE w.uid = ? " +
                 "    GROUP BY m.movieid, m.title " +
                 "    ORDER BY AVG(r.number_of_stars) DESC " +
                 "    LIMIT 10 " +
                 ") " +
                 "GROUP BY m.movieid, m.title " +
+                "HAVING AVG(r.number_of_stars) IS NOT NULL " +  
                 "UNION " +
                 "SELECT " +
                 "   m.movieid, " +
@@ -132,7 +135,7 @@ public class MovieReccomendation {
                 "   AVG(r.number_of_stars) AS avg_rating " +
                 "FROM movies m " +
                 "JOIN watched w ON m.movieid = w.movieid " +
-                "LEFT JOIN rates r ON m.movieid = r.movieid " +
+                "INNER JOIN rates r ON m.movieid = r.movieid " +  
                 "WHERE w.uid in ( " +
                 "    SELECT w2.uid " +
                 "    FROM watched w " +
@@ -141,7 +144,7 @@ public class MovieReccomendation {
                 "    GROUP BY w2.uid " +
                 ") " +
                 "GROUP BY m.movieid, m.title " +
-                "HAVING AVG(r.number_of_stars) IS NOT NULL " +
+                "HAVING AVG(r.number_of_stars) IS NOT NULL " +  
                 "ORDER BY avg_rating DESC " +
                 "LIMIT 10";
         
