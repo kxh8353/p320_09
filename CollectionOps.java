@@ -221,6 +221,8 @@ public class CollectionOps {
                 return;
             }
 
+            System.out.println();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -253,7 +255,7 @@ public class CollectionOps {
 
 
         // Check movie is not already in collection
-        String query4 = "SELECT name FROM contains WHERE collectionid = ? and movieid = ?";
+        String query4 = "SELECT collectionid FROM contains WHERE collectionid = ? and movieid = ?";
 
         try (PreparedStatement viewStatement = conn.prepareStatement(query4)){
             viewStatement.setInt(1, collectionID);
@@ -297,7 +299,8 @@ public class CollectionOps {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        input.close();
+        // input.close();
+        System.out.println();
 
 
     }
@@ -367,7 +370,7 @@ public class CollectionOps {
 
 
         //Check if movie is in collection
-        String query4 = "SELECT name FROM contains WHERE movieid = ? AND collectionid = ?";
+        String query4 = "SELECT collectionid FROM contains WHERE movieid = ? AND collectionid = ?";
 
         try (PreparedStatement viewStatement = conn.prepareStatement(query4)){
             viewStatement.setInt(1, movieID);
@@ -411,7 +414,8 @@ public class CollectionOps {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        input.close();
+        // input.close();
+        System.out.println();
     }
 
 
@@ -479,7 +483,7 @@ public class CollectionOps {
         }
 
         System.out.println("Successfully deleted collection!");
-        input.close();
+        // input.close();
     }
 
 
@@ -534,7 +538,7 @@ public class CollectionOps {
             e.printStackTrace();
         }
         System.out.println("Successfully modified collection name!");
-        input.close();
+        // input.close();
 
     }
 

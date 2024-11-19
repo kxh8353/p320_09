@@ -142,7 +142,6 @@ public class AccountOps {
             try (ResultSet rs = checkUsernameStatement.executeQuery()) {
                 if (rs.next()) {
                     usernameCount = rs.getInt(1);
-                    //System.out.println("usernamecount: " + usernameCount);
                     if (usernameCount > 0) {
                         System.out.println("Username already exists.");
                         return; 
@@ -165,7 +164,6 @@ public class AccountOps {
                 incrementID++; // increment to check the next ID
             }
 
-            //System.out.println("New ID generated: " + newId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -176,7 +174,6 @@ public class AccountOps {
         KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
         keyGenerator.init(128); // block size is 128bits
 
-            ///cipher = Cipher.getInstance("AES");
 
             password = encrypt(password,secretKey);
 
